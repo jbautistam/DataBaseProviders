@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Bau.Libraries.LibDbProviders.PostgreSql</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="Npgsql" Version="6.0.7" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
+	</ItemGroup>
+</Project>

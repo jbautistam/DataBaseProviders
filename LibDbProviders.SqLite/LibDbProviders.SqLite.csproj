@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Bau.Libraries.LibDbProviders.SqLite</RootNamespace>
+	</PropertyGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
+	</ItemGroup>
+</Project>
