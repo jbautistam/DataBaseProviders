@@ -25,10 +25,10 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release src/LibHelper.csproj
+        run: dotnet build --configuration Release src/LibDbProviders.Base/LibDbProviders.Base.csproj
 
       - name: Create the package
-        run: dotnet pack --configuration Release src/LibHelper.csproj -p:PackageVersion=1.1.$GITHUB_RUN_NUMBER
+        run: dotnet pack --configuration Release src/LibDbProviders.Base/LibDbProviders.Base.csproj -p:PackageVersion=1.1.$GITHUB_RUN_NUMBER
 
       - name: Publish the package to Nuget
         run: dotnet nuget push src/bin/Release/*.nupkg --no-symbols --api-key ${{secrets.NUGET_TOKEN}}
