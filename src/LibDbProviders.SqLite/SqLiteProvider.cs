@@ -5,14 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.SqLite
 {
-	/// <summary>
-	///		Proveedor para SqLite
-	/// </summary>
-	public class SqLiteProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para SqLite
+    /// </summary>
+    public class SqLiteProvider : DbProviderBase
 	{
 		public SqLiteProvider(IConnectionString connectionString) : base(connectionString) 
 		{ 
@@ -47,7 +47,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{
 			// Convierte el parámetro
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new SQLiteParameter(parameter.Name, DbType.Int32);
 			else if (parameter.Value == null || parameter.Value is DBNull)
 				return new SQLiteParameter(parameter.Name, null);

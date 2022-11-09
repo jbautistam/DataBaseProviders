@@ -1,13 +1,12 @@
 ﻿using System;
-
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 {
-	/// <summary>
-	///		Clase base para las rutinas de ayuda en el tratamiento de SQL
-	/// </summary>
-	public abstract class BaseSqlHelper : ISqlHelper
+    /// <summary>
+    ///		Clase base para las rutinas de ayuda en el tratamiento de SQL
+    /// </summary>
+    public abstract class BaseSqlHelper : ISqlHelper
 	{
 		/// <summary>
 		///		Obtiene una cadena SQL que cuenta los elementos resultantes de una consulta
@@ -123,7 +122,7 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 						key.Equals(ParameterPrefix + parameter.Name, StringComparison.CurrentCultureIgnoreCase))
 					return new ParameterDb(ParameterPrefix + parameter.Name + index.ToString(), parameter.Value, parameter.Direction, parameter.Length);
 			// Si ha llegado hasta aquí, devuelve un parámetro nulo
-			return new ParameterDb(ParameterPrefix + key + index.ToString(), null, System.Data.ParameterDirection.Input);
+			return new ParameterDb(ParameterPrefix + key + index.ToString(), null, ParameterDb.ParameterDbDirection.Input);
 		}
 
 		/// <summary>

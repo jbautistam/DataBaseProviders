@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Schema;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.SqlServer
 {
-	/// <summary>
-	///		Proveedor para SQL Server
-	/// </summary>
-	public class SqlServerProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para SQL Server
+    /// </summary>
+    public class SqlServerProvider : DbProviderBase
 	{
 		public SqlServerProvider(IConnectionString connectionString) : base(connectionString) 
 		{ 
@@ -47,7 +47,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 		/// </summary>
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new SqlParameter(parameter.Name, SqlDbType.Int);
 			if (parameter.Value == null || parameter.Value is DBNull)
 				return new SqlParameter(parameter.Name, null);

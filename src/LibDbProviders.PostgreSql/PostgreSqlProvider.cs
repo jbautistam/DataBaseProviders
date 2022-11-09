@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using NpgsqlTypes;
 using Npgsql;
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.PostgreSql
 {
-	/// <summary>
-	///		Proveedor para PostgreSql
-	/// </summary>
-	public class PostgreSqlProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para PostgreSql
+    /// </summary>
+    public class PostgreSqlProvider : DbProviderBase
 	{
 		public PostgreSqlProvider(IConnectionString connectionString) : base(connectionString) 
 		{ 
@@ -42,7 +42,7 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{
 			// Convierte el parámetro
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new NpgsqlParameter(parameter.Name, NpgsqlDbType.Integer);
 			if (parameter.Value == null)
 				return new NpgsqlParameter(parameter.Name, null);

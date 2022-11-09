@@ -4,13 +4,14 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 {
-	/// <summary>
-	///		BulkCopy genérico
-	/// </summary>
-	public class SqlBulkCopy
+    /// <summary>
+    ///		BulkCopy genérico
+    /// </summary>
+    public class SqlBulkCopy
 	{
 		/// <summary>
 		///		Copia masiva de un <see cref="IDataReader"/> sobre una tabla
@@ -159,9 +160,9 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 		/// <summary>
 		///		Obtiene la colección de parámetros
 		/// </summary>
-		private Parameters.ParametersDbCollection GetParameters(IDataReader reader, Dictionary<string, string> mappings)
+		private ParametersDbCollection GetParameters(IDataReader reader, Dictionary<string, string> mappings)
 		{
-			Parameters.ParametersDbCollection parametersDb = new Parameters.ParametersDbCollection();
+			ParametersDbCollection parametersDb = new Models.ParametersDbCollection();
 
 				// Asigna los parámetros
 				for (int index = 0; index < reader.FieldCount; index++)

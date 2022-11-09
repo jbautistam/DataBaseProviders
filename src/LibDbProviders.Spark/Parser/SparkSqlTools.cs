@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Bau.Libraries.LibDbProviders.Base.Parameters;
-
 namespace Bau.Libraries.LibDbProviders.Spark.Parser
 {
 	/// <summary>

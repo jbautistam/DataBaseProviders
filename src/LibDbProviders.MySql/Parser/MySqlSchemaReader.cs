@@ -5,14 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
+using Bau.Libraries.LibDbProviders.Base.Extensors;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.MySql.Parser
 {
-	/// <summary>
-	///		Clase de lectura de esquemas para MySql
-	/// </summary>
-	internal class MySqlSchemaReader
+    /// <summary>
+    ///		Clase de lectura de esquemas para MySql
+    /// </summary>
+    internal class MySqlSchemaReader
 	{
 		/// <summary>
 		///		Obtiene el esquema

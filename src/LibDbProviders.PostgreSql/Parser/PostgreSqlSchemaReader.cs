@@ -5,14 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
+using Bau.Libraries.LibDbProviders.Base.Extensors;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.PostgreSql.Parser
 {
-	/// <summary>
-	///		Clase para lectura del esquema en una conexión postgress
-	/// </summary>
-	internal class PostgreSqlSchemaReader
+    /// <summary>
+    ///		Clase para lectura del esquema en una conexión postgress
+    /// </summary>
+    internal class PostgreSqlSchemaReader
 	{
 		/// <summary>
 		///		Obtiene el esquema

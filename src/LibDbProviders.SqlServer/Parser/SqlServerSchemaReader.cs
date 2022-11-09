@@ -5,15 +5,16 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Extensors;
+using Bau.Libraries.LibDbProviders.Base.Models;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 {
-	/// <summary>
-	///		Clase de lectura de los datos de esquema para SqlServer
-	/// </summary>
-	internal class SqlServerSchemaReader
+    /// <summary>
+    ///		Clase de lectura de los datos de esquema para SqlServer
+    /// </summary>
+    internal class SqlServerSchemaReader
 	{
 		/// <summary>
 		///		Clase para la carga de un esquema de una base de datos SQL Server

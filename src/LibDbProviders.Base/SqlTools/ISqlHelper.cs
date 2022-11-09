@@ -1,13 +1,12 @@
 ﻿using System;
-
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 {
-	/// <summary>
-	///		Interface para rutinas de ayuda en el tratamiento de SQL
-	/// </summary>
-	public interface ISqlHelper
+    /// <summary>
+    ///		Interface para rutinas de ayuda en el tratamiento de SQL
+    /// </summary>
+    public interface ISqlHelper
 	{
 		/// <summary>
 		///		Obtiene una cadena SQL que cuenta los elementos resultantes de una consulta

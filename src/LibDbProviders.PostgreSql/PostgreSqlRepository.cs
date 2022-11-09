@@ -1,14 +1,14 @@
 ﻿using System;
 
 using Bau.Libraries.LibDbProviders.Base.RepositoryData;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.PostgreSql
 {
-	/// <summary>
-	///		Clase para ayuda de repository de PostgreSql
-	/// </summary>
-	public class PostgreSqlRepository<TypeData> : RepositoryDataBase<TypeData>
+    /// <summary>
+    ///		Clase para ayuda de repository de PostgreSql
+    /// </summary>
+    public class PostgreSqlRepository<TypeData> : RepositoryDataBase<TypeData>
 	{
 		public PostgreSqlRepository(PostgreSqlProvider connection) : base(connection)
 		{

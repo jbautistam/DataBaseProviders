@@ -1,14 +1,14 @@
 ﻿using System;
 
 using Bau.Libraries.LibDbProviders.Base.RepositoryData;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.MySql
 {
-	/// <summary>
-	///		Clase para ayuda de repository de MySql
-	/// </summary>
-	public class MySqlRepository<TypeData> : RepositoryDataBase<TypeData>
+    /// <summary>
+    ///		Clase para ayuda de repository de MySql
+    /// </summary>
+    public class MySqlRepository<TypeData> : RepositoryDataBase<TypeData>
 	{
 		public MySqlRepository(MySqlProvider connection) : base(connection)
 		{

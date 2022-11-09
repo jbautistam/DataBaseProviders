@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 {
-	/// <summary>
-	///		Objeto base para los objetos que cumplan la interface <see cref="IRepositoryData{TypeData}"/>
-	/// </summary>
-	public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, IDisposable
+    /// <summary>
+    ///		Objeto base para los objetos que cumplan la interface <see cref="IRepositoryData{TypeData}"/>
+    /// </summary>
+    public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, IDisposable
 	{
 		protected RepositoryDataBase(IDbProvider connection)
 		{

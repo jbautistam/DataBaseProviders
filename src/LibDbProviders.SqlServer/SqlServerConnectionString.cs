@@ -48,7 +48,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 			DataBaseFile = dataBaseFile;
 		}
 
-		public SqlServerConnectionString(System.Collections.Generic.Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
+		public SqlServerConnectionString(Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
 
 		/// <summary>
 		///		Asigna el valor de un parámetro
@@ -158,7 +158,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 								// Devuelve la cadena de conexión
 								return connectionString;
 						default:
-							throw new Base.DBExceptions.DbException("Unknown connection type");
+							throw new Base.Exceptions.DbException("Unknown connection type");
 					}
 			}
 			set { _connectionString = value; }

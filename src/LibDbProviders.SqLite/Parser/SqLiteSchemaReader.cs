@@ -6,14 +6,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
+using Bau.Libraries.LibDbProviders.Base.Extensors;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.SqLite.Parser
 {
-	/// <summary>
-	///		Clase de lectura del esquema de SqLite
-	/// </summary>
-	internal class SqLiteSchemaReader
+    /// <summary>
+    ///		Clase de lectura del esquema de SqLite
+    /// </summary>
+    internal class SqLiteSchemaReader
 	{
 		/// <summary>
 		///		Carga el esquema

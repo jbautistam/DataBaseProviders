@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
 
 using MySql.Data.MySqlClient;
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.MySql
 {
-	/// <summary>
-	///		Proveedor para MySql
-	/// </summary>
-	public class MySqlProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para MySql
+    /// </summary>
+    public class MySqlProvider : DbProviderBase
 	{
 		public MySqlProvider(IConnectionString connectionString) : base(connectionString) 
 		{ 
@@ -41,7 +39,7 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{
 			// Convierte el parámetro
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new MySqlParameter(parameter.Name, MySqlDbType.Int32);
 			if (parameter.Value == null)
 				return new MySqlParameter(parameter.Name, null);

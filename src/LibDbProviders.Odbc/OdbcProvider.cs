@@ -5,14 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.ODBC
 {
-	/// <summary>
-	///		Proveedor para ODBC
-	/// </summary>
-	public class OdbcProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para ODBC
+    /// </summary>
+    public class OdbcProvider : DbProviderBase
 	{ 
 		public OdbcProvider(IConnectionString connectionString) : base(connectionString) 
 		{
@@ -40,7 +40,7 @@ namespace Bau.Libraries.LibDbProviders.ODBC
 		/// </summary>
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{ 
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new OdbcParameter(parameter.Name, OdbcType.Int);
 			if (parameter.IsText)
 				return new OdbcParameter(parameter.Name, OdbcType.VarChar);

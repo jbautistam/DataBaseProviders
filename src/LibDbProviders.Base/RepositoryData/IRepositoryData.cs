@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
-{	
-	// Delegados públicos de este espacio de nombres
-	public delegate object AssignDataCallBack(IDataReader data);
+{
+    // Delegados públicos de este espacio de nombres
+    public delegate object AssignDataCallBack(IDataReader data);
 
 	/// <summary>
 	///		Interface para los objetos de repositorio
@@ -34,7 +35,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Carga una colección utilizando genéricos
 		/// </summary>
-		List<TypeData> LoadCollection(string text, Parameters.ParametersDbCollection parameters,
+		List<TypeData> LoadCollection(string text, ParametersDbCollection parameters,
 									  CommandType commandType, AssignDataCallBack callBack);
 		
 		/// <summary>
@@ -52,7 +53,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Carga un objeto utilizando genéricos
 		/// </summary>
-		TypeData LoadObject(string text, Parameters.ParametersDbCollection parametersDB, 
+		TypeData LoadObject(string text, ParametersDbCollection parametersDB, 
 							CommandType commandType, AssignDataCallBack callBack);
 		
 		/// <summary>
@@ -68,7 +69,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión
 		/// </summary>
-		int Execute(string text, Parameters.ParametersDbCollection parametersDB, CommandType commandType);
+		int Execute(string text, ParametersDbCollection parametersDB, CommandType commandType);
 		
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
@@ -83,12 +84,12 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		object ExecuteScalar(string text, Parameters.ParametersDbCollection parametersDB, CommandType commandType);		
+		object ExecuteScalar(string text, ParametersDbCollection parametersDB, CommandType commandType);		
 
 		/// <summary>
 		///		Graba los datos de un objeto
 		/// </summary>
-		int? ExecuteGetIdentity(string text, Parameters.ParametersDbCollection parametersDB, CommandType commandType);
+		int? ExecuteGetIdentity(string text, ParametersDbCollection parametersDB, CommandType commandType);
 
 		/// <summary>
 		///		Conexión con la que trabaja el repository

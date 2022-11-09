@@ -4,15 +4,14 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base
 {
-	/// <summary>
-	///		Clase base para los proveedores de base de datos
-	/// </summary>
-	public abstract class DbProviderBase : IDbProvider
+    /// <summary>
+    ///		Clase base para los proveedores de base de datos
+    /// </summary>
+    public abstract class DbProviderBase : IDbProvider
 	{   
 		protected DbProviderBase(IConnectionString connectionString)
 		{ 
@@ -354,7 +353,21 @@ namespace Bau.Libraries.LibDbProviders.Base
 				else
 					parameterDB.Value = parameter.GetDBValue();
 				// Asigna la dirección
-				parameterDB.Direction = parameter.Direction;
+				switch (parameter.Direction)
+				{
+					case ParameterDb.ParameterDbDirection.InputOutput:
+							parameterDB.Direction = ParameterDirection.InputOutput;
+						break;
+					case ParameterDb.ParameterDbDirection.Output:
+							parameterDB.Direction = ParameterDirection.Output;
+						break;
+					case ParameterDb.ParameterDbDirection.ReturnValue:
+							parameterDB.Direction = ParameterDirection.ReturnValue;
+						break;
+					default:
+							parameterDB.Direction = ParameterDirection.Input;
+						break;
+				}
 				// Devuelve el parámetro
 				return parameterDB;
 		}
@@ -373,19 +386,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 
 				// Recupera los parámetros
 				foreach (IDataParameter outputParameter in outputParameters)
-				{
-					ParameterDb parameter = new ParameterDb();
-
-						// Asigna los datos
-						parameter.Name = outputParameter.ParameterName;
-						parameter.Direction = outputParameter.Direction;
-						if (outputParameter.Value == DBNull.Value)
-							parameter.Value = null;
-						else
-							parameter.Value = outputParameter.Value;
-						// Añade el parámetro a la colección
-						parameters.Add(parameter);
-				}
+					parameters.Add(new ParameterDb(outputParameter.ParameterName, outputParameter.Value, ParameterDb.ParameterDbDirection.Output));
 				// Devuelve la colección de parámetros
 				return parameters;
 		}

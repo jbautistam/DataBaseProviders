@@ -5,16 +5,15 @@ using System.Data.Odbc;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Bau.Libraries.LibDbProviders.Base;
+using Bau.Libraries.LibDbProviders.Base.Extensors;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.Spark.Parser
 {
-	/// <summary>
-	///		Lector de esquema para Spark
-	/// </summary>
-	internal class SparkSchemaReader
+    /// <summary>
+    ///		Lector de esquema para Spark
+    /// </summary>
+    internal class SparkSchemaReader
 	{
 		/// <summary>
 		///		Obtiene el esquema

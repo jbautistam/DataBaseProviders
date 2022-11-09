@@ -5,4 +5,7 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>Bau.Libraries.LibDbProviders.Base</RootNamespace>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Models\Pagination.cs" />
+	</ItemGroup>
 </Project>

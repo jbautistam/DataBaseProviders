@@ -2,10 +2,10 @@
 
 namespace Bau.Libraries.LibDbProviders.Base.Models
 {
-	/// <summary>
-	///		Clase con los datos de una consulta
-	/// </summary>
-	public class QueryModel
+    /// <summary>
+    ///		Clase con los datos de una consulta
+    /// </summary>
+    public class QueryModel
 	{
 		/// <summary>
 		///		Tipo de consulta
@@ -31,7 +31,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
 		/// <summary>
 		///		Argumentos / parámetros de la consulta
 		/// </summary>
-		public Parameters.ParametersDbCollection Parameters { get; set; } = new Parameters.ParametersDbCollection();
+		public ParametersDbCollection Parameters { get; } = new();
 
 		/// <summary>
 		///		Tiempo de espera de la consulta

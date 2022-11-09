@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bau.Libraries.LibDbProviders.Base.DBExceptions
+namespace Bau.Libraries.LibDbProviders.Base.Exceptions
 {
 	/// <summary>
 	///		Excepción de base de datos

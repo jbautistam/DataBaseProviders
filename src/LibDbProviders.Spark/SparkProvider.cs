@@ -5,14 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Spark
 {
-	/// <summary>
-	///		Proveedor para Spark
-	/// </summary>
-	public class SparkProvider : DbProviderBase
+    /// <summary>
+    ///		Proveedor para Spark
+    /// </summary>
+    public class SparkProvider : DbProviderBase
 	{ 
 		public SparkProvider(IConnectionString connectionString) : base(connectionString) 
 		{
@@ -41,7 +41,7 @@ namespace Bau.Libraries.LibDbProviders.Spark
 		protected override IDataParameter ConvertParameter(ParameterDb parameter)
 		{ 
 			// Crea un parámetro de retorno entero
-			if (parameter.Direction == ParameterDirection.ReturnValue)
+			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new OdbcParameter(parameter.Name, OdbcType.Int);
 			// Asigna el tipo de parámetro
 			if (parameter.IsText)

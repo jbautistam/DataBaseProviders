@@ -3,15 +3,14 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Bau.Libraries.LibDbProviders.Base.Parameters;
+using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base
 {
-	/// <summary>
-	///		Interface para los proveedores de datos
-	/// </summary>
-	public interface IDbProvider : IDisposable
+    /// <summary>
+    ///		Interface para los proveedores de datos
+    /// </summary>
+    public interface IDbProvider : IDisposable
 	{
 		/// <summary>
 		///		Abre la conexión
