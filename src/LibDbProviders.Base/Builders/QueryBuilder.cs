@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Bau.Libraries.LibDbProviders.Base.Models;
 
@@ -57,16 +56,60 @@ namespace Bau.Libraries.LibDbProviders.Base.Builders
 			return this;
 		}
 
-		/// <summary>
-		///		Añade un parámetro
-		/// </summary>
-		public QueryBuilder WithParameter(string key, object value)
-		{
-			// Añade un parámetro a los argumentos
-			Query.Parameters.Add(key, value);
+        /// <summary>
+        ///		Añade un parámetro a la colección de parámetros del comando
+        /// </summary>
+        public QueryBuilder WithParameter(string name, string value, int length, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
+        {
+            // Añade el parámetro
+			Query.Parameters.Add(name, value, length, direction);
 			// Devuelve el generador
 			return this;
-		}
+        }
+
+        /// <summary>
+        ///		Añade un parámetro a la colección de parámetros del comando
+        /// </summary>
+        public QueryBuilder WithParameter(string name, object? value, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
+        {
+            // Añade el parámetro
+			Query.Parameters.Add(name, value, direction);
+			// Devuelve el generador
+			return this;
+        }
+
+        /// <summary>
+        ///		Añade un parámetro a la colección de parámetros del comando
+        /// </summary>
+        public QueryBuilder WithParameter(string name, byte[] buffer, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
+        {
+            // Añade el parámetro
+			Query.Parameters.Add(name, buffer, direction);
+			// Devuelve el generador
+			return this;
+        }
+
+        /// <summary>
+        ///		Añade un parámetro de tipo Text
+        /// </summary>
+        public QueryBuilder WithTextParameter(string name, string value, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
+        {
+            // Añade el parámetro
+			Query.Parameters.Add(name, value, direction);
+			// Devuelve el generador
+			return this;
+        }
+
+        /// <summary>
+        ///		Añade un parámetro para el código de retorno
+        /// </summary>
+        public QueryBuilder WithReturnCodeParameter()
+        {
+            // Añade el parámetro
+			Query.Parameters.AddReturnCode();
+			// Devuelve el generador
+			return this;
+        }
 
 		/// <summary>
 		///		Añade una serie de parámetros
@@ -76,6 +119,17 @@ namespace Bau.Libraries.LibDbProviders.Base.Builders
 			// Añade los parámetros
 			foreach (KeyValuePair<string, object> keyValue in parameters)
 				Query.Parameters.Add(keyValue.Key, keyValue.Value);
+			// Devuelve el generador
+			return this;
+		}
+
+		/// <summary>
+		///		Añade una colección de parámetros
+		/// </summary>
+		public QueryBuilder WithParameters(ParametersDbCollection parameters)
+		{
+			// Añade los parámetros
+			Query.Parameters.AddRange(parameters);
 			// Devuelve el generador
 			return this;
 		}

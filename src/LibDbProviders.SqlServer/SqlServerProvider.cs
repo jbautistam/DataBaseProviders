@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 using Bau.Libraries.LibDbProviders.Base.Models;
+using System.Data.Common;
 
 namespace Bau.Libraries.LibDbProviders.SqlServer
 {
@@ -31,7 +30,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 		/// <summary>
 		///		Obtiene un comando
 		/// </summary>
-		protected override IDbCommand GetCommand(string text, TimeSpan? timeout = null)
+		protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 		{
 			SqlCommand command = new SqlCommand(text, Connection as SqlConnection, Transaction as SqlTransaction);
 

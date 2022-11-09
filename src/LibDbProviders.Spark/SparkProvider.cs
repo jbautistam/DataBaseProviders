@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.Odbc;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Models;
@@ -30,7 +29,7 @@ namespace Bau.Libraries.LibDbProviders.Spark
 		/// <summary>
 		///		Obtiene un comando
 		/// </summary>
-		protected override IDbCommand GetCommand(string text, TimeSpan? timeout = null)
+		protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 		{ 
 			return new OdbcCommand(text, Connection as OdbcConnection);
 		}

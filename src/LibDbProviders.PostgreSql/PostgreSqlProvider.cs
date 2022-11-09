@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Data.Common;
 
 using NpgsqlTypes;
 using Npgsql;
@@ -31,7 +30,7 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 		/// <summary>
 		///		Obtiene un comando
 		/// </summary>
-		protected override IDbCommand GetCommand(string text, TimeSpan? timeout = null)
+		protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 		{
 			return new NpgsqlCommand(text, Connection as NpgsqlConnection, Transaction as NpgsqlTransaction);
 		}
@@ -63,7 +62,7 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 			if (parameter.Value is Enum)
 				return new NpgsqlParameter(parameter.Name, NpgsqlDbType.Integer);
 			// Si ha llegado hasta aquí, lanza una excepción
-			throw new NotSupportedException($"Tipo del parámetro {parameter.Name} desconocido");
+			throw new NotSupportedException($"Parameter type unknown {parameter.Name}");
 		}
 
 		/// <summary>

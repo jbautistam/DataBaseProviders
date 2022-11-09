@@ -15,7 +15,9 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
 			/// <summary>Texto</summary>
 			Text,
 			/// <summary>Procedimiento almacenado</summary>
-			StoredProcedure
+			StoredProcedure,
+			/// <summary>Nombre de tabla</summary>
+			Table
 		}
 
 		/// <summary>

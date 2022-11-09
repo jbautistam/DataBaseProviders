@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 
 using MySql.Data.MySqlClient;
 using Bau.Libraries.LibDbProviders.Base;
@@ -28,7 +29,7 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		/// <summary>
 		///		Obtiene un comando
 		/// </summary>
-		protected override IDbCommand GetCommand(string text, TimeSpan? timeout = null)
+		protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 		{
 			return new MySqlCommand(text, Connection as MySqlConnection, Transaction as MySqlTransaction);
 		}
@@ -60,7 +61,7 @@ namespace Bau.Libraries.LibDbProviders.MySql
 			if (parameter.Value is Enum)
 				return new MySqlParameter(parameter.Name, MySqlDbType.Int16);
 			// Si ha llegado hasta aquí, lanza una excepción
-			throw new NotSupportedException($"Tipo del parámetro {parameter.Name} desconocido");
+			throw new NotSupportedException($"Parameter type unknown {parameter.Name}");
 		}
 
 		/// <summary>

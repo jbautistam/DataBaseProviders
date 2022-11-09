@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
+
 using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
@@ -47,7 +47,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Carga una colección utilizando genéricos
 		/// </summary>
-		public List<TypeData> LoadCollection(string text, ParametersDbCollection parameters,
+		public List<TypeData> LoadCollection(string text, ParametersDbCollection? parameters,
 											 CommandType commandType, AssignDataCallBack callBack)
 		{
 			List<TypeData> results = new List<TypeData>();
@@ -55,7 +55,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 				// Abre la conexión
 				Connection.Open();
 				// Carga los datos
-				using (IDataReader data = Connection.ExecuteReader(text, parameters, commandType))
+				using (IDataReader data = Connection.ExecuteReader(text, parameters ?? new ParametersDbCollection(), commandType))
 				{ 
 					// Lee los datos
 					while (data.Read())

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Models;
@@ -30,7 +29,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 		/// <summary>
 		///		Obtiene un comando
 		/// </summary>
-		protected override IDbCommand GetCommand(string text, TimeSpan? timeout = null)
+		protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 		{
 			SQLiteCommand command = new SQLiteCommand(text, Connection as SQLiteConnection, Transaction as SQLiteTransaction);
 
@@ -49,7 +48,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 			// Convierte el parámetro
 			if (parameter.Direction == ParameterDb.ParameterDbDirection.ReturnValue)
 				return new SQLiteParameter(parameter.Name, DbType.Int32);
-			else if (parameter.Value == null || parameter.Value is DBNull)
+			else if (parameter.Value is null || parameter.Value is DBNull)
 				return new SQLiteParameter(parameter.Name, null);
 			else if (parameter.IsText)
 				return new SQLiteParameter(parameter.Name, DbType.String);
@@ -74,7 +73,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 			else if (parameter.Value is Enum)
 				return new SQLiteParameter(parameter.Name, DbType.Int64);
 			// Si ha llegado hasta aquí, lanza una excepción
-			throw new NotSupportedException($"Tipo del parámetro {parameter.Name} desconocido");
+			throw new NotSupportedException($"Parameter type unknown {parameter.Name}");
 		}
 
 		/// <summary>

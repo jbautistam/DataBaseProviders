@@ -130,7 +130,7 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 		/// </summary>
 		protected string ConvertToSqlValue(ParameterDb parameterDb)
 		{
-			if (parameterDb.Value == null || parameterDb.Value == DBNull.Value)
+			if (parameterDb.Value is null || parameterDb.Value is DBNull)
 				return "NULL";
 			else
 				switch (parameterDb.Value)
@@ -154,7 +154,7 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 					case bool valueBool:
 						return ConvertBooleanToSql(valueBool);
 					default:
-						return ConvertStringToSql(parameterDb.Value.ToString());
+						return ConvertStringToSql(parameterDb.Value.ToString() ?? string.Empty);
 				}
 		}
 
@@ -198,7 +198,10 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 		/// </summary>
 		private string ConvertStringToSql(string value)
 		{
-			return "'" + value.Replace("'", "''") + "'";
+			if (string.IsNullOrEmpty(value))
+				return "''";
+			else
+				return "'" + value.Replace("'", "''") + "'";
 		}
 
 		/// <summary>

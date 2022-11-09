@@ -26,7 +26,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
         /// <summary>
         ///		Añade un parámetro a la colección de parámetros del comando
         /// </summary>
-        public void Add(string name, object value, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
+        public void Add(string name, object? value, ParameterDb.ParameterDbDirection direction = ParameterDb.ParameterDbDirection.Input)
         {
             Add(new ParameterDb(name, value, direction));
         }
@@ -79,10 +79,10 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
         {
             ParameterDb parameterDB = Search(ReturnCodeName);
 
-            if (parameterDB.Value == null || !(parameterDB.Value is int))
-                return null;
-            else
-                return (int) parameterDB.Value;
+                if (parameterDB.Value == null || !(parameterDB.Value is int))
+                    return null;
+                else
+                    return (int) parameterDB.Value;
         }
 
         /// <summary>
@@ -97,59 +97,6 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
                 else
                     return parameterDB.Value;
         }
-
-        ///// <summary>
-        /////		Normaliza dos fechas (sin nulos)
-        ///// </summary>
-        //public void NormalizeDates(ref DateTime start, ref DateTime end)
-        //{
-        //    DateTime? startNull = start, endNull = end;
-
-        //        // Normaliza las fechas
-        //        NormalizeDates(ref startNull, ref endNull);
-        //        // Asigna las fechas de salida (en realidad, nunca pueden ser nulas porque se ha hecho ya una asignación)
-        //        start = startNull ?? start;
-        //        end = endNull ?? end;
-        //}
-
-        ///// <summary>
-        /////		Normaliza las fechas
-        ///// </summary>
-        //public void NormalizeDates(ref DateTime? start, ref DateTime? end)
-        //{
-        //    // Cambia las fechas
-        //    SwapDates(ref start, ref end);
-        //    // Normaliza las fechas de inicio o fin
-        //    if (start != null)
-        //        start = GetNormalizedDate(start, 0, 0, 0);
-        //    if (end != null)
-        //        end = GetNormalizedDate(end, 23, 59, 59);
-        //}
-
-        ///// <summary>
-        /////		Intercambia dos fechas para un filtro
-        ///// </summary>
-        //private void SwapDates(ref DateTime? first, ref DateTime? second)
-        //{
-        //    if (first != null && second != null && first > second)
-        //    {
-        //        DateTime? value = first;
-
-        //        first = second;
-        //        second = value;
-        //    }
-        //}
-
-        ///// <summary>
-        /////		Obtiene una fecha normalizada al inicio o fin del día
-        ///// </summary>
-        //private DateTime? GetNormalizedDate(DateTime? value, int hour, int minute, int second)
-        //{
-        //    DateTime normalized = value ?? DateTime.Now;
-
-        //        // Devuelve la fecha normalizada
-        //        return new DateTime(normalized.Year, normalized.Month, normalized.Day, hour, minute, second);
-        //}
 
         /// <summary>
         ///		Indizador de la colección por el nombre de parámetro

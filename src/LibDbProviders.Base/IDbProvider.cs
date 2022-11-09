@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
+
 using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base
@@ -37,10 +36,24 @@ namespace Bau.Libraries.LibDbProviders.Base
 		int Execute(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null);
 
 		/// <summary>
+		///		Ejecuta una sentencia o un procedimiento sobre la base de datos
+		/// </summary>
+		/// <returns>
+		/// Devuelve el número de registros procesados o -1 si se ha ejecutado un Rollback o la cadena SQL es una
+		///	instrucción DML
+		///	</returns>
+		int Execute(QueryModel query);
+
+		/// <summary>
 		///		Ejecuta una sentencia o un procedimiento sobre la base de datos de forma asíncrona
 		/// </summary>
 		Task<int> ExecuteAsync(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null,
 							   CancellationToken? cancellationToken = null);
+
+		/// <summary>
+		///		Ejecuta una sentencia o un procedimiento sobre la base de datos de forma asíncrona
+		/// </summary>
+		Task<int> ExecuteAsync(QueryModel query, CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		///		Obtiene un DataReader
@@ -48,10 +61,20 @@ namespace Bau.Libraries.LibDbProviders.Base
 		IDataReader ExecuteReader(string sql, ParametersDbCollection parametersDB, CommandType commandType, TimeSpan? timeout = null);
 
 		/// <summary>
+		///		Obtiene un DataReader
+		/// </summary>
+		IDataReader ExecuteReader(QueryModel query);
+
+		/// <summary>
 		///		Obtiene un DataReader de forma asíncrona
 		/// </summary>
 		Task<DbDataReader> ExecuteReaderAsync(string sql, ParametersDbCollection parametersDB, CommandType commandType, TimeSpan? timeout = null,
 											  CancellationToken? cancellationToken = null);
+
+		/// <summary>
+		///		Obtiene un DataReader de forma asíncrona
+		/// </summary>
+		Task<DbDataReader> ExecuteReaderAsync(QueryModel query, CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		///		Obtiene un IDataReader a partir de un nombre de una sentencia o procedimiento y sus parámetros paginando
@@ -69,13 +92,23 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar
 		/// </summary>
-		object ExecuteScalar(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null);
+		object? ExecuteScalar(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null);
+
+		/// <summary>
+		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar
+		/// </summary>
+		object? ExecuteScalar(QueryModel query);
 
 		/// <summary>
 		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar de forma asíncrona
 		/// </summary>
-		Task<object> ExecuteScalarAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
-										TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
+		Task<object?> ExecuteScalarAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
+										 TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
+
+		/// <summary>
+		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar de forma asíncrona
+		/// </summary>
+		Task<object?> ExecuteScalarAsync(QueryModel query, CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
@@ -83,10 +116,20 @@ namespace Bau.Libraries.LibDbProviders.Base
 		DataTable GetDataTable(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null);
 
 		/// <summary>
+		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
+		/// </summary>
+		DataTable GetDataTable(QueryModel query);
+
+		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros de forma asíncrona
 		/// </summary>
 		Task<DataTable> GetDataTableAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
 										  TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
+
+		/// <summary>
+		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros de forma asíncrona
+		/// </summary>
+		Task<DataTable> GetDataTableAsync(QueryModel query, CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
@@ -106,9 +149,19 @@ namespace Bau.Libraries.LibDbProviders.Base
 											  TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
 
 		/// <summary>
+		///		Obtiene un datatable con el plan de ejcución de una sentencia
+		/// </summary>
+		Task<DataTable> GetExecutionPlanAsync(QueryModel query, CancellationToken? cancellationToken = null);
+
+		/// <summary>
 		///		Obtiene el número de registros resultantes de una consulta SQL
 		/// </summary>
 		long? GetRecordsCount(string sql, ParametersDbCollection parametersDB, TimeSpan? timeout = null);
+
+		/// <summary>
+		///		Obtiene el número de registros resultantes de una consulta SQL
+		/// </summary>
+		long? GetRecordsCount(QueryModel query);
 
 		/// <summary>
 		///		Obtiene el número de registros resultantes de una consulta SQL de forma asíncrona
@@ -116,16 +169,20 @@ namespace Bau.Libraries.LibDbProviders.Base
 		Task<long?> GetRecordsCountAsync(string sql, ParametersDbCollection parametersDB, TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
 
 		/// <summary>
+		///		Obtiene el número de registros resultantes de una consulta SQL de forma asíncrona
+		/// </summary>
+		Task<long?> GetRecordsCountAsync(QueryModel query, CancellationToken? cancellationToken = null);
+
+		/// <summary>
 		///		Copia masiva a una tabla
 		/// </summary>
-		long BulkCopy(IDataReader reader, string table, System.Collections.Generic.Dictionary<string, string> mappings, 
-					  int recordsPerBlock = 30_000, TimeSpan? timeout = null);
+		long BulkCopy(IDataReader reader, string table, Dictionary<string, string> mappings, int recordsPerBlock = 30_000, TimeSpan? timeout = null);
 
 		/// <summary>
 		///		Copia masiva a una tabla de forma asíncrona
 		/// </summary>
-		Task<long> BulkCopyAsync(IDataReader reader, string table, System.Collections.Generic.Dictionary<string, string> mappings, 
-								 int recordsPerBlock = 30_000, TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
+		Task<long> BulkCopyAsync(IDataReader reader, string table, Dictionary<string, string> mappings, int recordsPerBlock = 30_000, TimeSpan? timeout = null, 
+								 CancellationToken? cancellationToken = null);
 
 		/// <summary>
 		///		Inicia una transacción
@@ -155,7 +212,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Transacción actual
 		/// </summary>
-		IDbTransaction Transaction { get; }
+		IDbTransaction? Transaction { get; }
 
 		/// <summary>
 		///		Clase para tratamiento adicional de cadenas SQL
