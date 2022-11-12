@@ -75,7 +75,7 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		/// <summary>
 		///		Obtiene un datatable con el plan de ejcución de una sentencia
 		/// </summary>
-		public async override Task<DataTable> GetExecutionPlanAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
+		public async override Task<DataTable> GetExecutionPlanAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, 
 																	TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await GetDataTableAsync($"EXPLAIN ANALYZE {sql}", parameters, commandType, timeout, cancellationToken);

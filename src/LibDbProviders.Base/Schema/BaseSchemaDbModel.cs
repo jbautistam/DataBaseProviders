@@ -10,12 +10,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Esquema de la tabla
 		/// </summary>
-		public string Schema { get; set; }
+		public string? Schema { get; set; }
 
 		/// <summary>
 		///		Catálogo
 		/// </summary>
-		public string Catalog { get; set; }
+		public string? Catalog { get; set; }
 
 		/// <summary>
 		///		Nombre completo
@@ -55,12 +55,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Nombre
 		/// </summary>
-		public string Name { get; set; }
+		public string? Name { get; set; }
 
 		/// <summary>
 		///		Descripción
 		/// </summary>
-		public string Description { get; set; }
+		public string? Description { get; set; }
 
 		/// <summary>
 		///		Fecha de creación

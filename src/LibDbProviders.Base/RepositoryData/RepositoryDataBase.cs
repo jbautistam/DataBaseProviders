@@ -181,7 +181,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		public object ExecuteScalar(string text, string Parameter, string parameterValue,
+		public object? ExecuteScalar(string text, string Parameter, string parameterValue,
 									int parameterLength, CommandType commandType = CommandType.Text)
 		{
 			return ExecuteScalar(text, GetParameters(Parameter, parameterValue, parameterLength), commandType);
@@ -190,7 +190,7 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		public object ExecuteScalar(string text, string Parameter, int? parameterValue, CommandType commandType = CommandType.Text)
+		public object? ExecuteScalar(string text, string Parameter, int? parameterValue, CommandType commandType = CommandType.Text)
 		{
 			return ExecuteScalar(text, GetParameters(Parameter, parameterValue), commandType);
 		}
@@ -198,9 +198,9 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		public object ExecuteScalar(string text, ParametersDbCollection parametersDB, CommandType commandType = CommandType.Text)
+		public object? ExecuteScalar(string text, ParametersDbCollection parametersDB, CommandType commandType = CommandType.Text)
 		{
-			object value;
+			object? value;
 
 				// Abre la conexión
 				Connection.Open();

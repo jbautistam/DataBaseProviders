@@ -38,7 +38,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 				// Obtiene la versión
 				try
 				{
-					version = (string) Connection.ExecuteScalar("SELECT SERVERPROPERTY('ProductVersion') AS ProductVersion", null, System.Data.CommandType.Text);
+					version = ((string?) Connection.ExecuteScalar("SELECT SERVERPROPERTY('ProductVersion') AS ProductVersion", null, System.Data.CommandType.Text)) ?? string.Empty;
 				}
 				catch (Exception exception)
 				{

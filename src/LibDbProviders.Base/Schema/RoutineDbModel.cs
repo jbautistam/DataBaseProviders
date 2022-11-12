@@ -24,7 +24,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Contenido de la rutina 
 		/// </summary>
-		public string Content { get; set; }
+		public string? Content { get; set; }
 
 		/// <summary>
 		///		Tipo de la rutina

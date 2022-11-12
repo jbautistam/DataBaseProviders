@@ -120,7 +120,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Ejecuta una sentencia o un procedimiento sobre la base de datos
 		/// </summary>
-		public int Execute(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null)
+		public int Execute(string sql, ParametersDbCollection? parameters, CommandType commandType, TimeSpan? timeout = null)
 		{
 			return Execute(ConvertQuery(sql, parameters, commandType, 0, 0, timeout));
 		}
@@ -151,7 +151,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Ejecuta una sentencia o un procedimiento sobre la base de datos de forma asíncrona
 		/// </summary>
-		public async Task<int> ExecuteAsync(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null,
+		public async Task<int> ExecuteAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, TimeSpan? timeout = null,
 											CancellationToken? cancellationToken = null)
 		{
 			return await ExecuteAsync(ConvertQuery(sql, parameters, commandType, 0, 0, timeout));
@@ -160,7 +160,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un DataReader
 		/// </summary>
-		public IDataReader ExecuteReader(string sql, ParametersDbCollection parametersDB, CommandType commandType, TimeSpan? timeout = null)
+		public IDataReader ExecuteReader(string sql, ParametersDbCollection? parametersDB, CommandType commandType, TimeSpan? timeout = null)
 		{
 			return ExecuteReader(ConvertQuery(sql, parametersDB, commandType, 0, 0, timeout));
 		}
@@ -180,7 +180,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un DataReader de forma asíncrona
 		/// </summary>
-		public async Task<DbDataReader> ExecuteReaderAsync(string sql, ParametersDbCollection parametersDB, CommandType commandType, 
+		public async Task<DbDataReader> ExecuteReaderAsync(string sql, ParametersDbCollection? parametersDB, CommandType commandType, 
 														   TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await ExecuteReaderAsync(ConvertQuery(sql, parametersDB, commandType, 0, 0, timeout), cancellationToken);
@@ -201,7 +201,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <remarks>
 		///		Sólo está implementado totalmente para los comandos de texto, no para los procedimientos almacenados
 		/// </remarks>
-		public IDataReader ExecuteReader(string sql, ParametersDbCollection parameters, CommandType commandType, int pageNumber, int pageSize, TimeSpan? timeout = null)
+		public IDataReader ExecuteReader(string sql, ParametersDbCollection? parameters, CommandType commandType, int pageNumber, int pageSize, TimeSpan? timeout = null)
 		{
 			return ExecuteReader(ConvertQuery(sql, parameters, commandType, pageNumber, pageSize, timeout));
 		}
@@ -213,7 +213,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <remarks>
 		///		Sólo está implementado totalmente para los comandos de texto, no para los procedimientos almacenados
 		/// </remarks>
-		public async Task<DbDataReader> ExecuteReaderAsync(string sql, ParametersDbCollection parameters, CommandType commandType, int pageNumber, int pageSize, 
+		public async Task<DbDataReader> ExecuteReaderAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, int pageNumber, int pageSize, 
 														   TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await ExecuteReaderAsync(ConvertQuery(sql, parameters, commandType, pageNumber, pageSize, timeout), cancellationToken);
@@ -230,7 +230,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar
 		/// </summary>
-		public object? ExecuteScalar(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null)
+		public object? ExecuteScalar(string sql, ParametersDbCollection? parameters, CommandType commandType, TimeSpan? timeout = null)
 		{
 			return ExecuteScalar(ConvertQuery(sql, parameters, commandType, 0, 0, timeout));
 		}
@@ -246,7 +246,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Ejecuta una sentencia o procedimiento sobre la base de datos y devuelve un escalar de forma asíncrona
 		/// </summary>
-		public async Task<object?> ExecuteScalarAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
+		public async Task<object?> ExecuteScalarAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, 
 													 TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await ExecuteScalarAsync(ConvertQuery(sql, parameters, commandType, 0, 0, timeout), cancellationToken);
@@ -268,7 +268,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
 		/// </summary>
-		public DataTable GetDataTable(string sql, ParametersDbCollection parameters, CommandType commandType, TimeSpan? timeout = null)
+		public DataTable GetDataTable(string sql, ParametersDbCollection? parameters, CommandType commandType, TimeSpan? timeout = null)
 		{
 			return GetDataTable(ConvertQuery(sql, parameters, commandType, 0, 0, timeout));
 		}
@@ -289,7 +289,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros de forma asíncrona
 		/// </summary>
-		public async Task<DataTable> GetDataTableAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
+		public async Task<DataTable> GetDataTableAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, 
 													   TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await GetDataTableAsync(ConvertQuery(sql, parameters, commandType, 0, 0, timeout), cancellationToken);
@@ -298,7 +298,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
 		/// </summary>
-		public DataTable GetDataTable(string sql, ParametersDbCollection parameters, CommandType commandType, int pageNumber, int pageSize, TimeSpan? timeout = null)
+		public DataTable GetDataTable(string sql, ParametersDbCollection? parameters, CommandType commandType, int pageNumber, int pageSize, TimeSpan? timeout = null)
 		{
 			return GetDataTable(ConvertQuery(sql, parameters, commandType, pageNumber, pageSize, timeout));
 		}
@@ -306,7 +306,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un dataTable a partir de un nombre de una sentencia o procedimiento y sus parámetros
 		/// </summary>
-		public async Task<DataTable> GetDataTableAsync(string sql, ParametersDbCollection parameters, CommandType commandType, int pageNumber, int pageSize, 
+		public async Task<DataTable> GetDataTableAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, int pageNumber, int pageSize, 
 													   TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await GetDataTableAsync(ConvertQuery(sql, parameters, commandType, pageNumber, pageSize, timeout), cancellationToken);
@@ -323,7 +323,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene un datatable con el plan de ejcución de una sentencia
 		/// </summary>
-		public abstract Task<DataTable> GetExecutionPlanAsync(string sql, ParametersDbCollection parameters, CommandType commandType, 
+		public abstract Task<DataTable> GetExecutionPlanAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, 
 															  TimeSpan? timeout = null, CancellationToken? cancellationToken = null);
 
 		/// <summary>
@@ -351,7 +351,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene el número de registros de una consulta
 		/// </summary>
-		public long? GetRecordsCount(string sql, ParametersDbCollection parametersDB, TimeSpan? timeout = null)
+		public long? GetRecordsCount(string sql, ParametersDbCollection? parametersDB, TimeSpan? timeout = null)
 		{
 			return GetRecordsCount(ConvertQuery(sql, parametersDB, CommandType.Text, 0, 0, timeout));
 		}
@@ -382,7 +382,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Obtiene el número de registros de una consulta
 		/// </summary>
-		public async Task<long?> GetRecordsCountAsync(string sql, ParametersDbCollection parametersDB, 
+		public async Task<long?> GetRecordsCountAsync(string sql, ParametersDbCollection? parametersDB, 
 													  TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return await GetRecordsCountAsync(ConvertQuery(sql, parametersDB, CommandType.Text, 0, 0, timeout), cancellationToken);
@@ -410,7 +410,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Añade a un comando los parámetros de una clase <see cref="ParametersDbCollection"/>
 		/// </summary>
-		protected void AddParameters(DbCommand command, ParametersDbCollection parameters)
+		protected void AddParameters(DbCommand command, ParametersDbCollection? parameters)
 		{ 
 			// Limpia los parámetros antiguos
 			command.Parameters.Clear();
@@ -464,7 +464,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// </summary>
 		private ParametersDbCollection ReadOutputParameters(IDataParameterCollection outputParameters)
 		{
-			ParametersDbCollection parameters = new ParametersDbCollection();
+			ParametersDbCollection parameters = new();
 
 				// Recupera los parámetros
 				foreach (IDataParameter outputParameter in outputParameters)
@@ -513,21 +513,12 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Convierte una serie de propiedades en una consulta
 		/// </summary>
-		private QueryModel ConvertQuery(string sql, ParametersDbCollection parameters, CommandType commandType, int page, int pageSize, TimeSpan? timeout)
+		private QueryModel ConvertQuery(string sql, ParametersDbCollection? parameters, CommandType commandType, int page, int pageSize, TimeSpan? timeout)
 		{
-			Builders.QueryBuilder builder = new();
-
-				// Añade la SQL
-				builder.WithSql(sql, ConvertCommandType(commandType))
-					   .WithParameters(parameters);
-				// Añade la paginación
-				if (page > 0 && pageSize > 0)
-					builder.WithPagination(page, pageSize);
-				// Añade el timeout
-				if (timeout is not null)
-					builder.WithTimeout(timeout.Value);
-				// Devuelve la consulta generada
-				return builder.Build();
+			return new Builders.QueryBuilder(sql, ConvertCommandType(commandType))
+								.WithParameters(parameters)
+								.WithPagination(page, pageSize)
+								.WithTimeout(timeout);
 		}
 
 		/// <summary>
@@ -580,7 +571,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// </summary>
 		private void Dispose(bool disposing)
 		{
-			if (disposing && Connection != null)
+			if (disposing && Connection is not null)
 			{
 				Close();
 				Connection.Dispose();

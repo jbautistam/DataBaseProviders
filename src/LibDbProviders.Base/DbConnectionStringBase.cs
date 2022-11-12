@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Bau.Libraries.LibDbProviders.Base 
 {
@@ -8,16 +7,17 @@ namespace Bau.Libraries.LibDbProviders.Base
 	/// </summary>
 	public abstract class DbConnectionStringBase : IConnectionString
 	{
-		protected DbConnectionStringBase(string connectionString, int timeout = 15)
+		// Variables privadas
+		private string _connectionString = string.Empty;
+
+		protected DbConnectionStringBase(string connectionString)
 		{ 
 			ConnectionString = connectionString;
-			Timeout = timeout;
 		}
 
-		protected DbConnectionStringBase(Dictionary<string, string> parameters, int timeout = 15)
+		protected DbConnectionStringBase(Dictionary<string, string> parameters)
 		{
 			AssignParameters(parameters);
-			Timeout = timeout;
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 				if (!string.IsNullOrWhiteSpace(parameter.Key))
 				{
 					if (IsEqual(parameter.Key, nameof(Timeout)))
-						Timeout = GetInt(parameter.Value, 15);
+						Timeout = TimeSpan.FromMinutes(GetInt(parameter.Value, 15));
 					else
 						AssignParameter(parameter.Key.Trim(), Trim(parameter.Value));
 				}
@@ -39,6 +39,11 @@ namespace Bau.Libraries.LibDbProviders.Base
 		///		Asigna un parámetro
 		/// </summary>
 		protected abstract void AssignParameter(string key, string value);
+
+		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected abstract string GenerateConnectionString();
 
 		/// <summary>
 		///		Comprueba si dos cadenas son iguales (sin tener en cuenta las mayúsculas)
@@ -95,11 +100,22 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Cadena de conexión
 		/// </summary>
-		public virtual string ConnectionString { get; set; }
+		public string ConnectionString
+		{ 
+			get 
+			{
+				// Si no se ha definido la cadena, se genera
+				if (string.IsNullOrWhiteSpace(_connectionString))
+					_connectionString = GenerateConnectionString();
+				// Devuelve la cadena de conexión
+				return _connectionString;
+			}
+			set { _connectionString = value ?? string.Empty; }
+		}
 
 		/// <summary>
 		///		Tiempo de espera
 		/// </summary>
-		public int Timeout { get; set; }
+		public TimeSpan Timeout { get; set; } = TimeSpan.FromMinutes(1);
 	}
 }

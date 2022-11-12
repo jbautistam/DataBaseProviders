@@ -10,12 +10,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Definición
 		/// </summary>
-		public string Definition { get; set; }
+		public string? Definition { get; set; }
 
 		/// <summary>
 		///		Opción check
 		/// </summary>
-		public string CheckOption { get; set; }
+		public string? CheckOption { get; set; }
 
 		/// <summary>
 		///		Indica si es modificable

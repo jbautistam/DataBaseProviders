@@ -7,9 +7,9 @@ namespace Bau.Libraries.LibDbProviders.Spark
 	/// </summary>
 	public class SparkConnectionString : Base.DbConnectionStringBase
 	{ 
-		public SparkConnectionString(string connectionString, int timeout = 15) : base(connectionString, timeout) {}
+		public SparkConnectionString(string connectionString) : base(connectionString) {}
 
-		public SparkConnectionString(System.Collections.Generic.Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
+		public SparkConnectionString(Dictionary<string, string> parameters) : base(parameters) {}
 
 		/// <summary>
 		///		Asigna el valor de un parámetro
@@ -18,6 +18,14 @@ namespace Bau.Libraries.LibDbProviders.Spark
 		{
 			if (IsEqual(key, nameof(ConnectionString)))
 				ConnectionString = value;
+		}
+
+		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected override string GenerateConnectionString()
+		{
+			return ConnectionString;
 		}
 	}
 }

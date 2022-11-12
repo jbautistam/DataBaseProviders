@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Extensors;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
@@ -25,6 +22,8 @@ namespace Bau.Libraries.LibDbProviders.MySql.Parser
 				// Carga los datos del esquema
 				using (MySqlProvider connection = new MySqlProvider(provider.ConnectionString))
 				{
+					// Asigna el tiempo de espera
+					connection.ConnectionString.Timeout = timeout;
 					// Abre la conexión
 					await connection.OpenAsync(cancellationToken);
 					// Carga los datos 
@@ -35,13 +34,13 @@ namespace Bau.Libraries.LibDbProviders.MySql.Parser
 															.CreateDataReader())
 					{
 						while (!cancellationToken.IsCancellationRequested && await rdoData.ReadAsync(cancellationToken))
-							schema.Add(rdoData.IisNull<string>("TableType").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase),
-									   rdoData.IisNull<string>("SchemaName"),
-									   rdoData.IisNull<string>("TableName"),
-									   rdoData.IisNull<string>("ColumnName"),
-									   GetFieldType(rdoData.IisNull<string>("ColumnType")),
-									   rdoData.IisNull<string>("ColumnType"),
-									   ConvertToInt(rdoData.IisNull<string>("ColumnLength")),
+							schema.Add((rdoData.IisNull<string>("TableType") ?? "Unknwon").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase),
+									   rdoData.IisNull<string>("SchemaName") ?? "Unknwon",
+									   rdoData.IisNull<string>("TableName") ?? "Unknwon",
+									   rdoData.IisNull<string>("ColumnName") ?? "Unknwon",
+									   GetFieldType(rdoData.IisNull<string>("ColumnType") ?? "Unknwon"),
+									   rdoData.IisNull<string>("ColumnType") ?? "Unknwon",
+									   ConvertToInt(rdoData.IisNull<string>("ColumnLength") ?? string.Empty),
 									   rdoData.IisNull<long>("PrimaryKey") == 1,
 									   rdoData.IisNull<long>("IsRequired") == 1);
 					}
@@ -81,7 +80,7 @@ namespace Bau.Libraries.LibDbProviders.MySql.Parser
 								return parts[1];
 					}
 			// Si ha llegado hasta aquí es porque no ha encontrado nada
-			return "";
+			return string.Empty;
 		}
 
 		/// <summary>

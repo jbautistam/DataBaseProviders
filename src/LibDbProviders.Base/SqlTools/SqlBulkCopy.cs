@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Threading;
-using System.Threading.Tasks;
 using Bau.Libraries.LibDbProviders.Base.Models;
 
 namespace Bau.Libraries.LibDbProviders.Base.SqlTools
@@ -62,24 +59,29 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 				// Abre una transacción
 				provider.BeginTransaction();
 				// Lee los registros e inserta
-				if (!cancellationToken.IsCancellationRequested)
-					while (await (reader as DbDataReader).ReadAsync(cancellationToken))
-					{
-						// Ejecuta el comando de inserción
-						await provider.ExecuteAsync(sql, GetParameters(reader, mappingsConverted), CommandType.Text, timeout, cancellationToken);
-						// Cierra la transacción
-						blockRecords++;
-						if (blockRecords % recordsPerBlock == 0)
+				if (reader is DbDataReader dataReader)
+				{
+					while (await dataReader.ReadAsync(cancellationToken))
+						if (!cancellationToken.IsCancellationRequested)
 						{
-							// Confirma la transacción y abre una nueva
-							provider.Commit();
-							provider.BeginTransaction();
-							// Reinicia el número de registros del bloque
-							blockRecords = 0;
+							// Ejecuta el comando de inserción
+							await provider.ExecuteAsync(sql, GetParameters(reader, mappingsConverted), CommandType.Text, timeout, cancellationToken);
+							// Cierra la transacción
+							blockRecords++;
+							if (blockRecords % recordsPerBlock == 0)
+							{
+								// Confirma la transacción y abre una nueva
+								provider.Commit();
+								provider.BeginTransaction();
+								// Reinicia el número de registros del bloque
+								blockRecords = 0;
+							}
+							// Incrementa el número de registros
+							records++;
 						}
-						// Incrementa el número de registros
-						records++;
-					}
+				}
+				else
+					throw new ArgumentException($"Can't convert IDataReader reader to DbDataReader");
 				// Cancela o confirma la transacción si es necesario
 				if (cancellationToken.IsCancellationRequested)
 					provider.RollBack();
@@ -162,7 +164,7 @@ namespace Bau.Libraries.LibDbProviders.Base.SqlTools
 		/// </summary>
 		private ParametersDbCollection GetParameters(IDataReader reader, Dictionary<string, string> mappings)
 		{
-			ParametersDbCollection parametersDb = new Models.ParametersDbCollection();
+			ParametersDbCollection parametersDb = new();
 
 				// Asigna los parámetros
 				for (int index = 0; index < reader.FieldCount; index++)

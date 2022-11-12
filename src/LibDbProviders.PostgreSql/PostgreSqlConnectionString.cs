@@ -9,17 +9,14 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 	/// </summary>
 	public class PostgreSqlConnectionString : DbConnectionStringBase
 	{ 
-		// Variables privadas
-		private string connectionString;
+		public PostgreSqlConnectionString() : base(string.Empty) { }
 
-		public PostgreSqlConnectionString() : base(string.Empty, 30) { }
+		public PostgreSqlConnectionString(string connectionString) : base(connectionString) {}
 
-		public PostgreSqlConnectionString(string connectionString) : base(connectionString, 30) {}
-
-		public PostgreSqlConnectionString(System.Collections.Generic.Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
+		public PostgreSqlConnectionString(Dictionary<string, string> parameters) : base(parameters) {}
 
 		public PostgreSqlConnectionString(string server, string dataBase, int port, bool integratedSecurity, 
-										  string user, string password = null, int timeout = 15) : base(string.Empty, timeout)
+										  string user, string? password = null) : base(string.Empty)
 		{
 			Server = server;
 			DataBase = dataBase;
@@ -51,14 +48,37 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 		}
 
 		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected override string GenerateConnectionString()
+		{
+			string connection = $"Server={Server};Database={DataBase};";
+
+				// Añade el puerto
+				if (Port > 0)
+					connection += $"port={Port};";
+				// Añade las opciones de seguridad
+				if (UseIntegratedSecurity)
+					connection += "Integrated Security=true;";
+				else
+				{
+					connection += $"User Id={User};";
+					if (!string.IsNullOrEmpty(Password))
+						connection += $"Password={Password};";
+				}
+				// Devuelve la cadena de conexión
+				return connection;
+		}
+
+		/// <summary>
 		///		Servidor
 		/// </summary>
-		public string Server { get; set; }
+		public string? Server { get; set; }
 
 		/// <summary>
 		///		Base de datos
 		/// </summary>
-		public string DataBase { get; set; }
+		public string? DataBase { get; set; }
 
 		/// <summary>
 		///		Puerto
@@ -73,47 +93,11 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql
 		/// <summary>
 		///		Usuario
 		/// </summary>
-		public string User { get; set; }
+		public string? User { get; set; }
 
 		/// <summary>
 		///		Contraseña
 		/// </summary>
-		public string Password { get; set; }
-
-		/// <summary>
-		///		Cadena de conexión
-		/// </summary>
-		/// <remarks>
-		///		Ejemplo: Server=127.0.0.1;Port=5432;Database=myDataBase;User Id=myUsername;Password=myPassword;
-		///		Ejemplo: Server=127.0.0.1;Port=5432;Database=myDataBase;Integrated Security=true;
-		/// </remarks>
-		public override string ConnectionString 
-		{
-			get 
-			{
-				if (!string.IsNullOrEmpty(connectionString))
-					return connectionString;
-				else 
-				{ 
-					string connection = $"Server={Server};Database={DataBase};";
-
-						// Añade el puerto
-						if (Port > 0)
-							connection += $"port={Port};";
-						// Añade las opciones de seguridad
-						if (UseIntegratedSecurity)
-							connection += "Integrated Security=true;";
-						else
-						{
-							connection += $"User Id={User};";
-							if (!string.IsNullOrEmpty(Password))
-								connection += $"Password={Password};";
-						}
-						// Devuelve la cadena de conexión
-						return connection;
-				}
-			}
-			set { connectionString = value; }
-		}
+		public string? Password { get; set; }
 	}
 }

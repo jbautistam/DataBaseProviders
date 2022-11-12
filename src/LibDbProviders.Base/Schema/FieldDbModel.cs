@@ -32,7 +32,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Nombre de la tabla a la que se asocia el campo (interesante sobre todo cuando se trata de una vista)
 		/// </summary>
-		public string Table { get; set; }
+		public string? Table { get; set; }
 
 		/// <summary>
 		///		Tipo del campo
@@ -42,7 +42,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Tipo original del campo en la base de datos
 		/// </summary>
-		public string DbType { get; set; }
+		public string? DbType { get; set; }
 
 		/// <summary>
 		///		Indica si el campo es clave
@@ -62,7 +62,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Formato del campo
 		/// </summary>
-		public string Format { get; set; }
+		public string? Format { get; set; }
 
 		/// <summary>
 		///		Posición del campo
@@ -72,7 +72,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Valor predeterminado
 		/// </summary>
-		public string Default { get; set; }
+		public string? Default { get; set; }
 
 		public int NumericPrecision { get; set; }
 
@@ -82,13 +82,13 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 
 		public int DateTimePrecision { get; set; }
 
-		public string CharacterSetName { get; set; }
+		public string? CharacterSetName { get; set; }
 
-		public string CollationCatalog { get; set; }
+		public string? CollationCatalog { get; set; }
 
-		public string CollationSchema { get; set; }
+		public string? CollationSchema { get; set; }
 
-		public string CollationName { get; set; }
+		public string? CollationName { get; set; }
 
 		/// <summary>
 		///		Indica si es un campo de identidad

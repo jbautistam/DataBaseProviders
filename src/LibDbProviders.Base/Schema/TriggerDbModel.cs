@@ -10,12 +10,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Tabla a la que se asocia el trigger
 		/// </summary>
-		public string Table { get; set; }
+		public string? Table { get; set; }
 
 		/// <summary>
 		///		Nombre del usuario
 		/// </summary>
-		public string UserName { get; set; }
+		public string? UserName { get; set; }
 
 		/// <summary>
 		///		Categoría
@@ -58,6 +58,6 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 
 		public DateTime? DateReference { get; set; }
 
-		public string Content { get; set; }
+		public string? Content { get; set; }
 	}
 }

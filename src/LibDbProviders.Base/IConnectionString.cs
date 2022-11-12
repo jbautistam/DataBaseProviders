@@ -10,7 +10,7 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Asigna los parámetros de la cadena de conexión a partir de un diccionario
 		/// </summary>
-		void AssignParameters(System.Collections.Generic.Dictionary<string, string> parameters);
+		void AssignParameters(Dictionary<string, string> parameters);
 
 		/// <summary>
 		///		Compone la cadena de conexión a partir de los parámetros
@@ -20,6 +20,6 @@ namespace Bau.Libraries.LibDbProviders.Base
 		/// <summary>
 		///		Tiempo de espera
 		/// </summary>
-		int Timeout { get; set; }
+		TimeSpan Timeout { get; set; }
 	}
 }

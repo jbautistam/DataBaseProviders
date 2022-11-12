@@ -48,7 +48,7 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
             if (Value == null)
                 return DBNull.Value;
             else if (Value is Enum)
-                return (int)Value;
+                return (int) Value;
             else
                 return Value;
         }

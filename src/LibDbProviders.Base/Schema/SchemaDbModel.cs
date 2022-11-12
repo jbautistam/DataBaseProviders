@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bau.Libraries.LibDbProviders.Base.Schema
 {
@@ -12,11 +10,11 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Añade una tabla / vista a la colección del esquema
 		/// </summary>
-		public void Add(bool isTable, string schema, string tableName, string fieldName, 
-						FieldDbModel.Fieldtype fieldType, string fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
+		public void Add(bool isTable, string? schema, string? tableName, string? fieldName, 
+						FieldDbModel.Fieldtype fieldType, string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 		{
 			// Normaliza los datos
-			schema = schema ?? "";
+			schema = schema ?? string.Empty;
 			// Añade el elemento
 			if (!string.IsNullOrWhiteSpace(tableName) && !string.IsNullOrWhiteSpace(fieldName))
 				if (isTable)
@@ -28,8 +26,8 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Añade la tabla a la colección y un campo a la tabla
 		/// </summary>
-		private void Add(List<TableDbModel> tables, string schema, string tableName, string fieldName, FieldDbModel.Fieldtype fieldType, 
-						 string fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
+		private void Add(List<TableDbModel> tables, string? schema, string? tableName, string? fieldName, FieldDbModel.Fieldtype fieldType, 
+						 string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 		{
 			TableDbModel table = Search(tables, schema, tableName);
 
@@ -40,8 +38,8 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Añade la vista a la colección y un campo a la vista
 		/// </summary>
-		private void Add(List<ViewDbModel> views, string schema, string tableName, string fieldName, FieldDbModel.Fieldtype fieldType, 
-						 string fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
+		private void Add(List<ViewDbModel> views, string? schema, string? tableName, string? fieldName, FieldDbModel.Fieldtype fieldType, 
+						 string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 		{
 			ViewDbModel view = Search(views, schema, tableName);
 
@@ -52,13 +50,13 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Busca una tabla, si no existía, la añade
 		/// </summary>
-		private TableDbModel Search(List<TableDbModel> tables, string schema, string name)
+		private TableDbModel Search(List<TableDbModel> tables, string? schema, string? name)
 		{
-			TableDbModel table = tables.FirstOrDefault(item => item.Schema.Equals(schema, StringComparison.CurrentCultureIgnoreCase) &&
-															   item.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+			TableDbModel? table = tables.FirstOrDefault(item => (item.Schema ?? "Unknown").Equals(schema, StringComparison.CurrentCultureIgnoreCase) &&
+															    (item.Name ?? "Unknown").Equals(name, StringComparison.CurrentCultureIgnoreCase));
 
 				// Crea la tabla si no existía
-				if (table == null)
+				if (table is null)
 				{
 					// Crea la tabla
 					table = new TableDbModel
@@ -76,13 +74,13 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Busca una vista, si no existía, la añade
 		/// </summary>
-		private ViewDbModel Search(List<ViewDbModel> views, string schema, string name)
+		private ViewDbModel Search(List<ViewDbModel> views, string? schema, string? name)
 		{
-			ViewDbModel view = views.FirstOrDefault(item => item.Schema.Equals(schema, StringComparison.CurrentCultureIgnoreCase) &&
-															item.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+			ViewDbModel? view = views.FirstOrDefault(item => (item.Schema ?? "Unknown").Equals(schema, StringComparison.CurrentCultureIgnoreCase) &&
+															 (item.Name ?? "Unknown").Equals(name, StringComparison.CurrentCultureIgnoreCase));
 
 				// Crea la tabla si no existía
-				if (view == null)
+				if (view is null)
 				{
 					// Crea la vista
 					view = new ViewDbModel
@@ -100,21 +98,21 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Tablas de la base de datos
 		/// </summary>
-		public List<TableDbModel> Tables { get; } = new List<TableDbModel>();
+		public List<TableDbModel> Tables { get; } = new();
 
 		/// <summary>
 		///		Vistas de la base de datos
 		/// </summary>
-		public List<ViewDbModel> Views { get; } = new List<ViewDbModel>();
+		public List<ViewDbModel> Views { get; } = new();
 
 		/// <summary>
 		///		Rutinas de la base de datos
 		/// </summary>
-		public List<RoutineDbModel> Routines { get; } = new List<RoutineDbModel>();
+		public List<RoutineDbModel> Routines { get; } = new();
 
 		/// <summary>
 		///		Desencadenadores de la base de datos
 		/// </summary>
-		public List<TriggerDbModel> Triggers { get; } = new List<TriggerDbModel>();
+		public List<TriggerDbModel> Triggers { get; } = new();
 	}
 }

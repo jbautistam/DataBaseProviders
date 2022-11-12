@@ -21,7 +21,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 		/// </summary>
 		internal async Task<SchemaDbModel> GetSchemaAsync(SqlServerProvider provider, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			SchemaDbModel schema = new SchemaDbModel();
+			SchemaDbModel schema = new();
 
 				// Carga los datos del esquema
 				using (SqlServerProvider connection = new SqlServerProvider(provider.ConnectionString))
@@ -67,12 +67,12 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						TableDbModel table = new TableDbModel();
 
 							// Asigna los datos del registro al objeto
-							table.Catalog = (string) reader.IisNull("TABLE_CATALOG");
-							table.Schema = (string) reader.IisNull("TABLE_SCHEMA");
-							table.Name = (string) reader.IisNull("TABLE_NAME");
+							table.Catalog = reader.IisNull<string>("TABLE_CATALOG");
+							table.Schema = reader.IisNull<string>("TABLE_SCHEMA");
+							table.Name = reader.IisNull<string>("TABLE_NAME");
 							table.CreatedAt = reader.IisNull<DateTime?>("Create_Date");
 							table.UpdatedAt = reader.IisNull<DateTime?>("Modify_Date");
-							table.Description = (string) reader.IisNull("Description");
+							table.Description = reader.IisNull<string>("Description");
 							// Añade el objeto a la colección
 							schema.Tables.Add(table);
 					}
@@ -103,12 +103,12 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						ViewDbModel view = new ViewDbModel();
 
 							// Asigna los datos al objeto
-							view.Catalog = (string) reader.IisNull("Table_Catalog");
-							view.Schema = (string) reader.IisNull("Table_Schema");
-							view.Name = (string) reader.IisNull("Table_Name");
-							view.Definition = (string) reader.IisNull("View_Definition");
-							view.CheckOption = (string) reader.IisNull("Check_Option");
-							view.IsUpdatable = !((string) reader.IisNull("Is_Updatable")).Equals("NO", StringComparison.CurrentCultureIgnoreCase);
+							view.Catalog = reader.IisNull<string>("Table_Catalog");
+							view.Schema = reader.IisNull<string>("Table_Schema");
+							view.Name = reader.IisNull<string>("Table_Name");
+							view.Definition = reader.IisNull<string>("View_Definition");
+							view.CheckOption = reader.IisNull<string>("Check_Option");
+							view.IsUpdatable = !(reader.IisNull<string>("Is_Updatable") ?? "Unknown").Equals("NO", StringComparison.CurrentCultureIgnoreCase);
 							// Añade el objeto a la colección
 							schema.Views.Add(view);
 					}
@@ -123,7 +123,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 		/// </summary>
 		private async Task LoadTriggersAsync(SqlServerProvider connection, SchemaDbModel schema, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			string sql = @"SELECT tmpTables.name AS DS_Tabla, tmpTrigger.name AS DS_Trigger_Name,
+			string sql = @"SELECT tmpTables.name AS DS_Table, tmpTrigger.name AS DS_Trigger_Name,
 								   USER_NAME(tmpTrigger.uid) AS DS_User_Name, tmpTrigger.category AS NU_Category,
 								   CONVERT(bit, (CASE WHEN (OBJECTPROPERTY(tmpTrigger.id, N'IsExecuted') = 1) THEN 1 ELSE 0 END)) AS IsExecuted,
 								   CONVERT(bit, (CASE WHEN (OBJECTPROPERTY(tmpTrigger.id, N'ExecIsAnsiNullsOn') = 1) THEN 1 ELSE 0 END)) AS ExecIsAnsiNullsOn,
@@ -158,31 +158,31 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						TriggerDbModel trigger = new TriggerDbModel();
 
 							// Asigna los datos del registro al objeto
-							trigger.Catalog = "TABLE_CATALOG"; // clsBaseDB.iisNull(rdoTables, "TABLE_CATALOG") as string;
-							trigger.Schema = "TABLE_SCHEMA"; // clsBaseDB.iisNull(rdoTables, "TABLE_SCHEMA") as string;
-							trigger.Table = (string) reader.IisNull("DS_Tabla");
-							trigger.Name = (string) reader.IisNull("DS_Trigger_Name");
-							trigger.UserName = (string) reader.IisNull("DS_User_Name");
-							trigger.Category = (int) reader.IisNull("NU_Category");
-							trigger.IsExecuted = (bool) reader.IisNull("IsExecuted");
-							trigger.IsExecutionAnsiNullsOn = (bool) reader.IisNull("ExecIsAnsiNullsOn");
-							trigger.IsExecutionQuotedIdentOn = (bool) reader.IisNull("ExecIsQuotedIdentOn");
-							trigger.IsAnsiNullsOn = (bool) reader.IisNull("IsAnsiNullsOn");
-							trigger.IsQuotedIdentOn = (bool) reader.IisNull("IsQuotedIdentOn");
-							trigger.IsExecutionAfterTrigger = (bool) reader.IisNull("ExecIsAfterTrigger");
-							trigger.IsExecutionDeleteTrigger = (bool) reader.IisNull("ExecIsDeleteTrigger");
-							trigger.IsExecutionFirstDeleteTrigger = (bool) reader.IisNull("ExecIsFirstDeleteTrigger");
-							trigger.IsExecutionFirstInsertTrigger = (bool) reader.IisNull("ExecIsFirstInsertTrigger");
-							trigger.IsExecutionFirstUpdateTrigger = (bool) reader.IisNull("ExecIsFirstUpdateTrigger");
-							trigger.IsExecutionInsertTrigger = (bool) reader.IisNull("ExecIsInsertTrigger");
-							trigger.IsExecutionInsteadOfTrigger = (bool) reader.IisNull("ExecIsInsteadOfTrigger");
-							trigger.IsExecutionLastDeleteTrigger = (bool) reader.IisNull("ExecIsLastDeleteTrigger");
-							trigger.IsExecutionLastInsertTrigger = (bool) reader.IisNull("ExecIsLastInsertTrigger");
-							trigger.IsExecutionLastUpdateTrigger = (bool) reader.IisNull("ExecIsLastUpdateTrigger");
-							trigger.IsExecutionTriggerDisabled = (bool) reader.IisNull("ExecIsTriggerDisabled");
-							trigger.IsExecutionUpdateTrigger = (bool) reader.IisNull("ExecIsUpdateTrigger");
-							trigger.CreatedAt = ((DateTime?) reader.IisNull("FE_Create")) ?? DateTime.Now;
-							trigger.DateReference = (DateTime?) reader.IisNull("FE_Reference");
+							trigger.Catalog = null; // clsBaseDB.iisNull(rdoTables, "TABLE_CATALOG") as string;
+							trigger.Schema = null; // clsBaseDB.iisNull(rdoTables, "TABLE_SCHEMA") as string;
+							trigger.Table = reader.IisNull<string>("DS_Table");
+							trigger.Name = reader.IisNull<string>("DS_Trigger_Name");
+							trigger.UserName = reader.IisNull<string>("DS_User_Name");
+							trigger.Category = reader.IisNull<int>("NU_Category", 0);
+							trigger.IsExecuted = reader.IisNull<bool>("IsExecuted", false);
+							trigger.IsExecutionAnsiNullsOn = reader.IisNull<bool>("ExecIsAnsiNullsOn", false);
+							trigger.IsExecutionQuotedIdentOn = reader.IisNull<bool>("ExecIsQuotedIdentOn", false);
+							trigger.IsAnsiNullsOn = reader.IisNull<bool>("IsAnsiNullsOn", false);
+							trigger.IsQuotedIdentOn = reader.IisNull<bool>("IsQuotedIdentOn", false);
+							trigger.IsExecutionAfterTrigger = reader.IisNull<bool>("ExecIsAfterTrigger", false);
+							trigger.IsExecutionDeleteTrigger = reader.IisNull<bool>("ExecIsDeleteTrigger", false);
+							trigger.IsExecutionFirstDeleteTrigger = reader.IisNull<bool>("ExecIsFirstDeleteTrigger", false);
+							trigger.IsExecutionFirstInsertTrigger = reader.IisNull<bool>("ExecIsFirstInsertTrigger", false);
+							trigger.IsExecutionFirstUpdateTrigger = reader.IisNull<bool>("ExecIsFirstUpdateTrigger", false);
+							trigger.IsExecutionInsertTrigger = reader.IisNull<bool>("ExecIsInsertTrigger", false);
+							trigger.IsExecutionInsteadOfTrigger = reader.IisNull<bool>("ExecIsInsteadOfTrigger", false);
+							trigger.IsExecutionLastDeleteTrigger = reader.IisNull<bool>("ExecIsLastDeleteTrigger", false);
+							trigger.IsExecutionLastInsertTrigger = reader.IisNull<bool>("ExecIsLastInsertTrigger", false);
+							trigger.IsExecutionLastUpdateTrigger = reader.IisNull<bool>("ExecIsLastUpdateTrigger", false);
+							trigger.IsExecutionTriggerDisabled = reader.IisNull<bool>("ExecIsTriggerDisabled", false);
+							trigger.IsExecutionUpdateTrigger = reader.IisNull<bool>("ExecIsUpdateTrigger", false);
+							trigger.CreatedAt = reader.IisNull<DateTime>("FE_Create", DateTime.UtcNow);
+							trigger.DateReference = reader.IisNull<DateTime?>("FE_Reference");
 							// Añade el objeto a la colección (si es una tabla)
 							schema.Triggers.Add(trigger);
 					}
@@ -195,7 +195,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 		/// <summary>
 		///		Carga el texto de una función, procedimiento, trigger ...
 		/// </summary>
-		private async Task<string> LoadHelpTextAsync(SqlServerProvider connection, string name, TimeSpan timeout, CancellationToken cancellationToken)
+		private async Task<string> LoadHelpTextAsync(SqlServerProvider connection, string? name, TimeSpan timeout, CancellationToken cancellationToken)
 		{
 			string text = string.Empty;
 
@@ -206,7 +206,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 					{ 
 						// Obtiene el texto
 						while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
-							text += (string) reader.IisNull("Text") + Environment.NewLine;
+							text += reader.IisNull<string>("Text") + Environment.NewLine;
 					}
 				}
 				catch { }
@@ -233,11 +233,11 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						RoutineDbModel routine = new RoutineDbModel();
 
 							// Asigna los datos del recordset al objeto
-							routine.Catalog = (string) reader.IisNull("Table_Catalog");
-							routine.Schema = (string) reader.IisNull("Table_Schema");
-							routine.Name = (string) reader.IisNull("Table_Name");
-							routine.Type = GetRoutineType((string) reader.IisNull("Routine_Type"));
-							routine.Content = (string) reader.IisNull("Routine_Definition");
+							routine.Catalog = reader.IisNull<string>("Table_Catalog");
+							routine.Schema = reader.IisNull<string>("Table_Schema");
+							routine.Name = reader.IisNull<string>("Table_Name");
+							routine.Type = GetRoutineType(reader.IisNull<string>("Routine_Type") ?? "Unknown");
+							routine.Content = reader.IisNull<string>("Routine_Definition");
 							// Añade el objeto a la colección
 							schema.Routines.Add(routine);
 					}
@@ -294,13 +294,13 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						ConstraintDbModel constraint = new ConstraintDbModel();
 
 							// Asigna los datos del registro
-							constraint.Catalog = (string) reader.IisNull("Table_Catalog");
-							constraint.Schema = (string) reader.IisNull("Table_Schema");
-							constraint.Table = (string) reader.IisNull("Table_Name");
-							constraint.Column = (string) reader.IisNull("Column_Name");
-							constraint.Name = (string) reader.IisNull("Constraint_Name");
-							constraint.Type = GetConstratype((string) reader.IisNull("Constraint_Type"));
-							constraint.Position = (int) reader.IisNull("Ordinal_Position");
+							constraint.Catalog = reader.IisNull<string>("Table_Catalog");
+							constraint.Schema = reader.IisNull<string>("Table_Schema");
+							constraint.Table = reader.IisNull<string>("Table_Name");
+							constraint.Column = reader.IisNull<string>("Column_Name");
+							constraint.Name = reader.IisNull<string>("Constraint_Name");
+							constraint.Type = GetConstraintType(reader.IisNull<string>("Constraint_Type") ?? "Unknown");
+							constraint.Position = reader.IisNull<int>("Ordinal_Position", 0);
 							// Añade la restricción a la colección
 							table.Constraints.Add(constraint);
 					}
@@ -310,7 +310,7 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 		/// <summary>
 		///		Obtiene el tipo de una restricción a partir de su nombre
 		/// </summary>
-		private ConstraintDbModel.ConstraintType GetConstratype(string type)
+		private ConstraintDbModel.ConstraintType GetConstraintType(string type)
 		{
 			if (type.Equals("UNIQUE", StringComparison.CurrentCultureIgnoreCase))
 				return ConstraintDbModel.ConstraintType.Unique;
@@ -376,24 +376,24 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						FieldDbModel column = new FieldDbModel();
 
 							// Asigna los datos del registro
-							column.Name = (string) reader.IisNull("Column_Name");
-							column.OrdinalPosition = (int) reader.IisNull("Ordinal_Position", 0);
-							column.Default = (string) reader.IisNull("Column_Default");
-							column.IsRequired = ((string) reader.IisNull("Is_Nullable")).Equals("no", StringComparison.CurrentCultureIgnoreCase);
-							column.Type = GetFieldType((string) reader.IisNull("Data_Type"));
-							column.DbType = (string) reader.IisNull("Data_Type");
-							column.Length = (int) reader.IisNull("Character_Maximum_Length", 0);
-							column.NumericPrecision = (int) reader.IisNull("Numeric_Precision", 0);
-							column.NumericPrecisionRadix = (int) reader.IisNull("Numeric_Precision_Radix", 0);
-							column.NumericScale = (int) reader.IisNull("Numeric_Scale", 0);
-							column.DateTimePrecision = (int) reader.IisNull("DateTime_Precision", 0);
-							column.CharacterSetName = (string) reader.IisNull("Character_Set_Name");
-							column.CollationCatalog = (string) reader.IisNull("Collation_Catalog");
-							column.CollationSchema = (string) reader.IisNull("Collation_Schema");
-							column.CollationName = (string) reader.IisNull("Collation_Name");
-							column.IsIdentity = (bool) reader.IisNull("is_identity");
-							column.IsKey = (bool) reader.IisNull("IsPrimaryKey");
-							column.Description = (string) reader.IisNull("Description");
+							column.Name = reader.IisNull<string>("Column_Name");
+							column.OrdinalPosition = reader.IisNull<int>("Ordinal_Position", 0);
+							column.Default = reader.IisNull<string>("Column_Default");
+							column.IsRequired = (reader.IisNull<string>("Is_Nullable") ?? "Unknown").Equals("no", StringComparison.CurrentCultureIgnoreCase);
+							column.Type = GetFieldType(reader.IisNull<string>("Data_Type"));
+							column.DbType = reader.IisNull<string>("Data_Type");
+							column.Length = reader.IisNull<int>("Character_Maximum_Length", 0);
+							column.NumericPrecision = reader.IisNull<int>("Numeric_Precision", 0);
+							column.NumericPrecisionRadix = reader.IisNull<int>("Numeric_Precision_Radix", 0);
+							column.NumericScale = reader.IisNull<int>("Numeric_Scale", 0);
+							column.DateTimePrecision = reader.IisNull<int>("DateTime_Precision", 0);
+							column.CharacterSetName = reader.IisNull<string>("Character_Set_Name");
+							column.CollationCatalog = reader.IisNull<string>("Collation_Catalog");
+							column.CollationSchema = reader.IisNull<string>("Collation_Schema");
+							column.CollationName = reader.IisNull<string>("Collation_Name");
+							column.IsIdentity = reader.IisNull<bool>("is_identity", false);
+							column.IsKey = reader.IisNull<bool>("IsPrimaryKey", false);
+							column.Description = reader.IisNull<string>("Description");
 							// Añade la columna a la colección
 							table.Fields.Add(column);
 					}
@@ -425,14 +425,14 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 						FieldDbModel column = new FieldDbModel();
 
 							// Carga los datos de la columna
-							column.Catalog = (string) reader.IisNull("Table_Catalog");
-							column.Schema = (string) reader.IisNull("Table_Schema");
-							column.Table = (string) reader.IisNull("Table_Name");
-							column.Name = (string) reader.IisNull("Column_Name");
-							column.IsRequired = ((string) reader.IisNull("Is_Nullable")).Equals("no", StringComparison.CurrentCultureIgnoreCase);
-							column.Type = GetFieldType((string) reader.IisNull("Data_Type"));
-							column.DbType = (string) reader.IisNull("Data_Type");
-							column.Length = (int) reader.IisNull("Character_Maximum_Length", 0);
+							column.Catalog = reader.IisNull<string>("Table_Catalog");
+							column.Schema = reader.IisNull<string>("Table_Schema");
+							column.Table = reader.IisNull<string>("Table_Name");
+							column.Name = reader.IisNull<string>("Column_Name");
+							column.IsRequired = !(reader.IisNull<string>("Is_Nullable") ?? "No").Equals("no", StringComparison.CurrentCultureIgnoreCase);
+							column.Type = GetFieldType(reader.IisNull<string>("Data_Type"));
+							column.DbType = reader.IisNull<string>("Data_Type");
+							column.Length = reader.IisNull<int>("Character_Maximum_Length", 0);
 							// Añade la columna a la colección
 							view.Fields.Add(column);
 					}
@@ -442,46 +442,19 @@ namespace Bau.Libraries.LibDbProviders.SqlServer.Parser
 		/// <summary>
 		///		Obtiene el tipo de campo
 		/// </summary>
-		private FieldDbModel.Fieldtype GetFieldType(string columnType)
+		private FieldDbModel.Fieldtype GetFieldType(string? columnType)
 		{
-			// Normaliza el nombre de columna
-			columnType = (columnType ?? "").ToUpper();
-			// Obtiene el tipo de campo
-			switch (columnType)
+			return (columnType ?? string.Empty).ToUpper() switch
 			{
-				case "INTEGER":
-				case "INT":
-				case "SMALLINT":
-				case "BIGINT":
-				case "TINYINT":
-					return FieldDbModel.Fieldtype.Integer;
-				case "REAL":
-				case "FLOAT":
-				case "MONEY":
-				case "DECIMAL":
-					return FieldDbModel.Fieldtype.Decimal;
-				case "DATETIME":
-				case "DATE":
-				case "DATETIME2":
-				case "TIME":
-					return FieldDbModel.Fieldtype.Date;
-				case "BINARY":
-				case "VARBINARY":
-				case "IMAGE":
-					return FieldDbModel.Fieldtype.Binary;
-				case "BIT":
-					return FieldDbModel.Fieldtype.Boolean;
-				case "CHAR":
-				case "NCHAR":
-				case "VARCHAR":
-				case "NVARCHAR":
-				case "TEXT":
-				case "NTEXT":
-				case "UNIQUEIDENTIFIER":
-					return FieldDbModel.Fieldtype.String;
-				default:
-					return FieldDbModel.Fieldtype.Unknown;
-			}
+				null => FieldDbModel.Fieldtype.Unknown,
+				"INTEGER" or "INT" or "SMALLINT" or "BIGINT" or "TINYINT" => FieldDbModel.Fieldtype.Integer,
+				"REAL" or "FLOAT" or "MONEY" or "DECIMAL" => FieldDbModel.Fieldtype.Decimal,
+				"DATETIME" or "DATE" or "DATETIME2" or "TIME" => FieldDbModel.Fieldtype.Date,
+				"BINARY" or "VARBINARY" or "IMAGE" => FieldDbModel.Fieldtype.Binary,
+				"BIT" => FieldDbModel.Fieldtype.Boolean,
+				"CHAR" or "NCHAR" or "VARCHAR" or "NVARCHAR" or "TEXT" or "NTEXT" or "UNIQUEIDENTIFIER" => FieldDbModel.Fieldtype.String,
+				_ => FieldDbModel.Fieldtype.Unknown,
+			};
 		}
 	}
 }

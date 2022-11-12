@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Bau.Libraries.LibDbProviders.Base.Schema
 {
@@ -12,12 +10,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Añade un campo a la tabla
 		/// </summary>
-		public void AddField(string name, FieldDbModel.Fieldtype type, string dbType, int length, bool isPrimaryKey, bool isRequired)
+		public void AddField(string? name, FieldDbModel.Fieldtype type, string? dbType, int length, bool isPrimaryKey, bool isRequired)
 		{
-			FieldDbModel field = Fields.FirstOrDefault(item => item.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+			FieldDbModel? field = Fields.FirstOrDefault(item => (item.Name ?? "Unknown").Equals(name, StringComparison.CurrentCultureIgnoreCase));
 
 				// Si no existía el campo, se crea
-				if (field == null)
+				if (field is null)
 				{
 					field = new FieldDbModel { Name = name };
 					Fields.Add(field);
@@ -33,6 +31,6 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Campos de la tabla
 		/// </summary>
-		public List<FieldDbModel> Fields { get; } = new List<FieldDbModel>();
+		public List<FieldDbModel> Fields { get; } = new();
 	}
 }

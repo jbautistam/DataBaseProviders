@@ -73,17 +73,17 @@ namespace Bau.Libraries.LibDbProviders.Base.RepositoryData
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		object ExecuteScalar(string text, string Parameter, string parameterValue, int parameterLength, CommandType commandType);
+		object? ExecuteScalar(string text, string Parameter, string parameterValue, int parameterLength, CommandType commandType);
 		
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		object ExecuteScalar(string text, string Parameter, int? parameterValue, CommandType commandType);
+		object? ExecuteScalar(string text, string Parameter, int? parameterValue, CommandType commandType);
 		
 		/// <summary>
 		///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 		/// </summary>
-		object ExecuteScalar(string text, ParametersDbCollection parametersDB, CommandType commandType);		
+		object? ExecuteScalar(string text, ParametersDbCollection parametersDB, CommandType commandType);		
 
 		/// <summary>
 		///		Graba los datos de un objeto

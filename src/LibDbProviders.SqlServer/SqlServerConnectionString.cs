@@ -20,17 +20,13 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 			/// <summary>Un archivo de base de datos</summary>
 			File
 		}
-		// Variables privadas
-		private string _connectionString;
 
-		public SqlServerConnectionString() : base(string.Empty, 30) { }
+		public SqlServerConnectionString(string connectionString) : base(connectionString) { }
 
-		public SqlServerConnectionString(string connectionString, int timeout = 30) : base(connectionString, timeout) { }
+		public SqlServerConnectionString(string server, string user, string password, string dataBase, bool integratedSecurity) 
+						: this(server, 0, user, password, dataBase, integratedSecurity) {}
 
-		public SqlServerConnectionString(string server, string user, string password, string dataBase, bool integratedSecurity, int timeout = 15) 
-						: this(server, 0, user, password, dataBase, integratedSecurity, timeout) {}
-
-		public SqlServerConnectionString(string server, int port, string user, string password, string dataBase, bool integratedSecurity, int timeout = 15) : base(string.Empty, timeout)
+		public SqlServerConnectionString(string server, int port, string user, string password, string dataBase, bool integratedSecurity) : base(string.Empty)
 		{
 			Type = ConnectionType.Normal;
 			Server = server;
@@ -41,14 +37,14 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 			UseIntegratedSecurity = integratedSecurity;
 		}
 
-		public SqlServerConnectionString(string server, string dataBaseFile, int timeout = 15) : base(string.Empty, timeout)
+		public SqlServerConnectionString(string server, string dataBaseFile) : base(string.Empty)
 		{
 			Type = ConnectionType.File;
 			Server = server;
 			DataBaseFile = dataBaseFile;
 		}
 
-		public SqlServerConnectionString(Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
+		public SqlServerConnectionString(Dictionary<string, string> parameters) : base(parameters) {}
 
 		/// <summary>
 		///		Asigna el valor de un parámetro
@@ -78,6 +74,42 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 		}
 
 		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected override string GenerateConnectionString()
+		{
+			switch (Type)
+			{
+				case ConnectionType.File:
+					return $"Data Source={Server};AttachDbFilename=\"{DataBaseFile}\";Connect timeout={Timeout};User Instance=True;Integrated Security={UseIntegratedSecurity};";
+				case ConnectionType.Normal:
+					string connectionString = $"Data Source={GetServerAndPort(Server, Port)};Initial Catalog={DataBase};";
+
+						// Añade datos de usuario
+						if (UseIntegratedSecurity)
+							connectionString += "Integrated Security=True;";
+						else
+							connectionString += $"Persist Security Info=True;User ID={User};Password={Password};";
+						// Añade el valor que indica si se deben utilizar varios conjuntos de resultados
+						if (MultipleActiveResultSets)
+							connectionString += "MultipleActiveResultSets=True;";
+						// Devuelve la cadena de conexión
+						return connectionString;
+				default:
+					throw new Base.Exceptions.DbException("Unknown connection type");
+			}
+
+			// Obtiene el nombre de servidor y el puerto
+			string GetServerAndPort(string? server, int port)
+			{
+				if (port < 1 || port == 1433)
+					return server ?? string.Empty;
+				else
+					return $"{server},{port}";
+			}
+		}
+
+		/// <summary>
 		///		Tipo de conexión
 		/// </summary>
 		public ConnectionType Type { get; set; }
@@ -85,12 +117,12 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 		/// <summary>
 		///		Servidor
 		/// </summary>
-		public string Server { get; set; }
+		public string? Server { get; set; }
 
 		/// <summary>
 		///		Puerto
 		/// </summary>
-		public int Port { get; set; }
+		public int Port { get; set; } = 1433;
 
 		/// <summary>
 		///		Indica si se debe utilizar seguridad integrada
@@ -100,68 +132,26 @@ namespace Bau.Libraries.LibDbProviders.SqlServer
 		/// <summary>
 		///		Indica si se deben utilizar varios conjuntos de resultados
 		/// </summary>
-		public bool MultipleActiveResultSets { get; set; }
+		public bool MultipleActiveResultSets { get; set; } = true;
 
 		/// <summary>
 		///		Usuario
 		/// </summary>
-		public string User { get; set; }
+		public string? User { get; set; }
 
 		/// <summary>
 		///		Contraseña
 		/// </summary>
-		public string Password { get; set; }
+		public string? Password { get; set; }
 
 		/// <summary>
 		///		Base de datos
 		/// </summary>
-		public string DataBase { get; set; }
+		public string? DataBase { get; set; }
 
 		/// <summary>
 		///		Archivo de base de datos
 		/// </summary>
-		public string DataBaseFile { get; set; }
-
-		/// <summary>
-		///		Cadena de conexión
-		/// </summary>
-		public override string ConnectionString 
-		{
-			get 
-			{
-				string GetServerAndPort(string server, int port)
-				{
-					if (port < 1 || port == 1433)
-						return server;
-					else
-						return $"{server},{port}";
-				}
-
-				if (!string.IsNullOrEmpty(_connectionString))
-					return _connectionString;
-				else
-					switch (Type)
-					{
-						case ConnectionType.File:
-							return $"Data Source={Server};AttachDbFilename=\"{DataBaseFile}\";Connect timeout={Timeout};User Instance=True;Integrated Security={UseIntegratedSecurity};";
-						case ConnectionType.Normal:
-							string connectionString = $"Data Source={GetServerAndPort(Server, Port)};Initial Catalog={DataBase};";
-
-								// Añade datos de usuario
-								if (UseIntegratedSecurity)
-									connectionString += "Integrated Security=True;";
-								else
-									connectionString += $"Persist Security Info=True;User ID={User};Password={Password};";
-								// Añade el valor que indica si se deben utilizar varios conjuntos de resultados
-								if (MultipleActiveResultSets)
-									connectionString += "MultipleActiveResultSets=True;";
-								// Devuelve la cadena de conexión
-								return connectionString;
-						default:
-							throw new Base.Exceptions.DbException("Unknown connection type");
-					}
-			}
-			set { _connectionString = value; }
-		}
+		public string? DataBaseFile { get; set; }
 	}
 }

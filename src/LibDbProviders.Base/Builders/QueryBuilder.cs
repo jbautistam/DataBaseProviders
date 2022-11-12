@@ -9,31 +9,19 @@ namespace Bau.Libraries.LibDbProviders.Base.Builders
 	/// </summary>
 	public class QueryBuilder
 	{
-		public QueryBuilder()
+		public QueryBuilder(string sql, QueryModel.QueryType type)
 		{
-			Query = new QueryModel();
-		}
-
-		/// <summary>
-		///		Asigna la cadena SQL
-		/// </summary>
-		public QueryBuilder WithSql(string sql, QueryModel.QueryType type)
-		{
-			// Asigna la cadena SQL
-			Query.Sql = sql;
-			Query.Type = type;
-			// Devuelve el generador
-			return this;
+			Query = new QueryModel(sql, type);
 		}
 
 		/// <summary>
 		///		Asigna el tiempo de espera
 		/// </summary>
-		public QueryBuilder WithTimeout(TimeSpan timeout)
+		public QueryBuilder WithTimeout(TimeSpan? timeout)
 		{
 			// Asigna el tiempo de espera
-			if (timeout.TotalSeconds > 0)
-				Query.Timeout = timeout;
+			if (timeout is not null && timeout?.TotalSeconds > 0)
+				Query.Timeout = timeout.Value;
 			// Devuelve el generador
 			return this;
 		}
@@ -126,12 +114,21 @@ namespace Bau.Libraries.LibDbProviders.Base.Builders
 		/// <summary>
 		///		Añade una colección de parámetros
 		/// </summary>
-		public QueryBuilder WithParameters(ParametersDbCollection parameters)
+		public QueryBuilder WithParameters(ParametersDbCollection? parameters)
 		{
 			// Añade los parámetros
-			Query.Parameters.AddRange(parameters);
+			if (parameters is not null)
+				Query.Parameters.AddRange(parameters);
 			// Devuelve el generador
 			return this;
+		}
+
+		/// <summary>
+		///		Operador implícito
+		/// </summary>
+		public static implicit operator QueryModel(QueryBuilder builder)
+		{
+			return builder.Build();
 		}
 
 		/// <summary>

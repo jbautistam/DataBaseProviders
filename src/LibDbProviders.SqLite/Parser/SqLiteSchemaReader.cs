@@ -48,9 +48,9 @@ namespace Bau.Libraries.LibDbProviders.SqLite.Parser
 							schema.Add(true, "",
 										table,
 										rdoData.IisNull<string>("Name"),
-										GetFieldType(rdoData.IisNull<string>("Type")),
+										GetFieldType(rdoData.IisNull<string>("Type") ?? "Unknown"),
 										rdoData.IisNull<string>("Type"),
-										GetLengthFieldType(rdoData.IisNull<string>("Type")),
+										GetLengthFieldType(rdoData.IisNull<string>("Type") ?? "Unknown"),
 										rdoData.IisNull<long>("pk") == 1,
 										rdoData.IisNull<long>("notnull") == 1);
 					}
@@ -67,7 +67,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite.Parser
 				using (DbDataReader rdoData = await provider.ExecuteReaderAsync("SELECT Name FROM sqlite_master WHERE type = 'table'", null, CommandType.Text, timeout, cancellationToken))
 				{
 					while (!cancellationToken.IsCancellationRequested && await rdoData.ReadAsync(cancellationToken))
-						tables.Add(rdoData.IisNull<string>("name"));
+						tables.Add(rdoData.IisNull<string>("name") ?? "Unknown");
 				}
 				// Devuelve la colección de tablas
 				return tables;

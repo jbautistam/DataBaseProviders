@@ -33,8 +33,8 @@ namespace Bau.Libraries.LibDbProviders.ODBC
 					{
 						foreach (DataRow row in table.Rows)
 							if (!cancellationToken.IsCancellationRequested && 
-									row.IisNull<string>("Table_Type").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase))
-								tables.Add(row.IisNull<string>("Table_Name"));
+									(row.IisNull<string>("Table_Type") ?? "Unknown").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase))
+								tables.Add(row.IisNull<string>("Table_Name") ?? "Unknown");
 					}
 					// Carga las columnas
 					if (!cancellationToken.IsCancellationRequested)
@@ -51,7 +51,7 @@ namespace Bau.Libraries.LibDbProviders.ODBC
 											   row.IisNull<string>("Type_Name"),
 											   row.IisNull<int>("Column_Size", 0),
 											   false,
-											   row.IisNull<string>("Is_Nullable").Equals("No", StringComparison.CurrentCultureIgnoreCase));
+											   (row.IisNull<string>("Is_Nullable") ?? "Unknown").Equals("No", StringComparison.CurrentCultureIgnoreCase));
 						}
 				}
 				// Devuelve el esquema
@@ -61,7 +61,7 @@ namespace Bau.Libraries.LibDbProviders.ODBC
 		/// <summary>
 		///		Tipo de campo
 		/// </summary>
-		private FieldDbModel.Fieldtype GetFieldType(string fieldType)
+		private FieldDbModel.Fieldtype GetFieldType(string? fieldType)
 		{
 			if (string.IsNullOrEmpty(fieldType))
 				return FieldDbModel.Fieldtype.Unknown;

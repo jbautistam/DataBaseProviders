@@ -31,11 +31,11 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql.Parser
 					using (DbDataReader rdoData = await connection.ExecuteReaderAsync(GetSqlReadSchema(), null, CommandType.Text, timeout, cancellationToken))
 					{ 
 						while (!cancellationToken.IsCancellationRequested && await rdoData.ReadAsync(cancellationToken))
-							schema.Add(rdoData.IisNull<string>("TableType").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase),
+							schema.Add((rdoData.IisNull<string>("TableType") ?? "Unknown").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase),
 									   rdoData.IisNull<string>("SchemaName"),
 									   rdoData.IisNull<string>("TableName"),
 									   rdoData.IisNull<string>("ColumnName"),
-									   GetFieldType(rdoData.IisNull<string>("ColumnType")),
+									   GetFieldType(rdoData.IisNull<string>("ColumnType") ?? "Unknown"),
 									   rdoData.IisNull<string>("ColumnType"),
 									   rdoData.IisNull<int>("ColumnLength", 0),
 									   rdoData.IisNull<int>("PrimaryKey") == 1,

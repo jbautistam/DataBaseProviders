@@ -33,8 +33,8 @@ namespace Bau.Libraries.LibDbProviders.Spark.Parser
 					{
 						foreach (DataRow row in table.Rows)
 							if (!cancellationToken.IsCancellationRequested && 
-									row.IisNull<string>("Table_Type").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase))
-								tables.Add(row.IisNull<string>("Table_Name"));
+									(row.IisNull<string>("Table_Type") ?? "Unknown").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase))
+								tables.Add(row.IisNull<string>("Table_Name") ?? "Unkwnonw");
 					}
 					// Carga las columnas
 					if (!cancellationToken.IsCancellationRequested)
@@ -47,11 +47,11 @@ namespace Bau.Libraries.LibDbProviders.Spark.Parser
 											   row.IisNull<string>("Table_Schem"),
 											   row.IisNull<string>("Table_Name"),
 											   row.IisNull<string>("Column_Name"),
-											   GetFieldType(row.IisNull<string>("Type_Name")),
+											   GetFieldType(row.IisNull<string>("Type_Name") ?? "Unknown"),
 											   row.IisNull<string>("Type_Name"),
 											   row.IisNull<int>("Column_Size", 0),
 											   false,
-											   row.IisNull<string>("Is_Nullable").Equals("No", StringComparison.CurrentCultureIgnoreCase));
+											   (row.IisNull<string>("Is_Nullable") ?? "Unknown").Equals("No", StringComparison.CurrentCultureIgnoreCase));
 						}
 				}
 				// Devuelve el esquema

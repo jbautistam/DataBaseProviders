@@ -9,16 +9,11 @@ namespace Bau.Libraries.LibDbProviders.MySql
 	/// </summary>
 	public class MySqlConnectionString : DbConnectionStringBase
 	{ 
-		// Variables privadas
-		private string _connectionString;
+		public MySqlConnectionString(string connectionString) : base(connectionString) {}
 
-		public MySqlConnectionString() : base(string.Empty, 30) { }
+		public MySqlConnectionString(Dictionary<string, string> parameters) : base(parameters) {}
 
-		public MySqlConnectionString(string connectionString) : base(connectionString, 30) {}
-
-		public MySqlConnectionString(System.Collections.Generic.Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
-
-		public MySqlConnectionString(string server, string dataBase, int port, string user, string password = null, int timeout = 15) : base(string.Empty, timeout)
+		public MySqlConnectionString(string server, string dataBase, int port, string user, string? password = null) : base(string.Empty)
 		{
 			Server = server;
 			DataBase = dataBase;
@@ -47,14 +42,28 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		}
 
 		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected override string GenerateConnectionString()
+		{
+			string connection = $"server={Server};database={DataBase};port={Port};user={User};";
+
+				// Añade la contraseña
+				if (!string.IsNullOrEmpty(Password))
+					connection += $"password={Password};";
+				// Devuelve la cadena de conexión
+				return connection;
+		}
+
+		/// <summary>
 		///		Servidor
 		/// </summary>
-		public string Server { get; set; }
+		public string? Server { get; set; }
 
 		/// <summary>
 		///		Base de datos
 		/// </summary>
-		public string DataBase { get; set; }
+		public string? DataBase { get; set; }
 
 		/// <summary>
 		///		Puerto
@@ -64,34 +73,11 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		/// <summary>
 		///		Usuario
 		/// </summary>
-		public string User { get; set; }
+		public string? User { get; set; }
 
 		/// <summary>
 		///		Contraseña
 		/// </summary>
-		public string Password { get; set; }
-
-		/// <summary>
-		///		Cadena de conexión
-		/// </summary>
-		public override string ConnectionString 
-		{
-			get 
-			{
-				if (!string.IsNullOrEmpty(_connectionString))
-					return _connectionString;
-				else 
-				{ 
-					string connection = $"server={Server};database={DataBase};port={Port};user={User};";
-
-						// Añade la contraseña
-						if (!string.IsNullOrEmpty(Password))
-							connection += $"password={Password};";
-						// Devuelve la cadena de conexión
-						return connection;
-				}
-			}
-			set { _connectionString = value; }
-		}
+		public string? Password { get; set; }
 	}
 }

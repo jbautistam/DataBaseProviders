@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Bau.Libraries.LibDbProviders.Base;
 
 namespace Bau.Libraries.LibDbProviders.SqLite
@@ -26,16 +25,14 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 			/// <summary>Abre una base de datos en memoria</summary>
 			Memory
 		}
-		// Variables privadas
-		private string _connectionString;
 
-		public SqLiteConnectionString() : base(string.Empty, 30) { }
+		public SqLiteConnectionString() : base(string.Empty) { }
 
-		public SqLiteConnectionString(string connectionString, int timeout = 15) : base(connectionString, timeout) {}
+		public SqLiteConnectionString(string connectionString) : base(connectionString) {}
 
-		public SqLiteConnectionString(System.Collections.Generic.Dictionary<string, string> parameters, int timeout = 15) : base(parameters, timeout) {}
+		public SqLiteConnectionString(Dictionary<string, string> parameters) : base(parameters) {}
 
-		public SqLiteConnectionString(string fileName, string password, OpenMode mode = OpenMode.ReadWriteCreate, int timeout = 15) : base(string.Empty, timeout)
+		public SqLiteConnectionString(string fileName, string password, OpenMode mode = OpenMode.ReadWriteCreate) : base(string.Empty)
 		{
 			FileName = fileName;
 			Password = password;
@@ -56,44 +53,35 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 		}
 
 		/// <summary>
+		///		Genera la cadena de conexión
+		/// </summary>
+		protected override string GenerateConnectionString()
+		{
+			string connection = $"Data Source={FileName};";
+
+				// Añade la contraseña
+				if (!string.IsNullOrEmpty(Password))
+					connection += $"Password={Password};";
+				// Añade el modo
+				if (Mode != OpenMode.Unknown)
+					connection += $"Mode={Mode.ToString()};";
+				// Devuelve la cadena de conexión
+				return connection;
+		}
+
+		/// <summary>
 		///		Nombre de archivo
 		/// </summary>
-		public string FileName { get; private set; }
+		public string? FileName { get; private set; }
 
 		/// <summary>
 		///		Contraseña
 		/// </summary>
-		public string Password { get; private set; }
+		public string? Password { get; private set; }
 
 		/// <summary>
 		///		Modo de conexión
 		/// </summary>
-		public OpenMode Mode { get; private set; }
-
-		/// <summary>
-		///		Cadena de conexión
-		/// </summary>
-		public override string ConnectionString 
-		{
-			get 
-			{
-				if (!string.IsNullOrEmpty(_connectionString))
-					return _connectionString;
-				else 
-				{ 
-					string connection = $"Data Source={FileName};";
-
-						// Añade la contraseña
-						if (!string.IsNullOrEmpty(Password))
-							connection += $"Password={Password};";
-						// Añade el modo
-						if (Mode != OpenMode.Unknown)
-							connection += $"Mode={Mode.ToString()};";
-						// Devuelve la cadena de conexión
-						return connection;
-				}
-			}
-			set { _connectionString = value; }
-		}
+		public OpenMode Mode { get; private set; } = OpenMode.ReadWrite;
 	}
 }

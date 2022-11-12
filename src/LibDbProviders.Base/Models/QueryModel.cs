@@ -20,15 +20,23 @@ namespace Bau.Libraries.LibDbProviders.Base.Models
 			Table
 		}
 
+		public QueryModel(string sql, QueryType type, TimeSpan? timeout = null)
+		{
+			Sql = sql;
+			Type = type;
+			if (timeout is not null)
+				Timeout = timeout.Value;
+		}
+
 		/// <summary>
 		///		Consulta SQL o script
 		/// </summary>
-		public string Sql { get; set; }
+		public string Sql { get; }
 
 		/// <summary>
 		///		Tipo de consulta
 		/// </summary>
-		public QueryType Type { get; set; }
+		public QueryType Type { get; }
 
 		/// <summary>
 		///		Argumentos / parámetros de la consulta

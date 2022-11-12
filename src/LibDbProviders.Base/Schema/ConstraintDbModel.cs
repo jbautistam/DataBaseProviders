@@ -26,12 +26,12 @@ namespace Bau.Libraries.LibDbProviders.Base.Schema
 		/// <summary>
 		///		Tabla
 		/// </summary>
-		public string Table { get; set; }
+		public string? Table { get; set; }
 
 		/// <summary>
 		///		Columna
 		/// </summary>
-		public string Column { get; set; }
+		public string? Column { get; set; }
 
 		/// <summary>
 		///		Tipo de restricción
