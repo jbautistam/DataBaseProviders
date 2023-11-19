@@ -67,9 +67,9 @@ namespace Bau.Libraries.LibDbProviders.MySql
 		/// <summary>
 		///		Obtiene el esquema
 		/// </summary>
-		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(TimeSpan timeout, CancellationToken cancellationToken)
+		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			return await new Parser.MySqlSchemaReader().GetSchemaAsync(this, timeout, cancellationToken);
+			return await new Parser.MySqlSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
 		}
 
 		/// <summary>

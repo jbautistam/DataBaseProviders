@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Bau.Libraries.DbAggregator</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\Common\LibDataStructures\src\LibDataStructures.csproj" />
+	  <ProjectReference Include="..\..\..\..\Common\LibHelper\src\LibHelper.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.MySql\LibDbProviders.MySql.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.Odbc\LibDbProviders.Odbc.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.PostgreSql\LibDbProviders.PostgreSql.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.Spark\LibDbProviders.Spark.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.SqLite\LibDbProviders.SqLite.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.SqlServer\LibDbProviders.SqlServer.csproj" />
+	</ItemGroup>
+
+</Project>

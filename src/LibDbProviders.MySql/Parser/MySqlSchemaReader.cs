@@ -15,7 +15,7 @@ namespace Bau.Libraries.LibDbProviders.MySql.Parser
 		/// <summary>
 		///		Obtiene el esquema
 		/// </summary>
-		internal async Task<SchemaDbModel> GetSchemaAsync(MySqlProvider provider, TimeSpan timeout, CancellationToken cancellationToken)
+		internal async Task<SchemaDbModel> GetSchemaAsync(MySqlProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
 		{
 			SchemaDbModel schema = new SchemaDbModel();
 

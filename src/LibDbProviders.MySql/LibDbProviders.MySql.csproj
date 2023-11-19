@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace>Bau.Libraries.LibDbProviders.MySql</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="MySql.Data" Version="8.0.31" />
+	  <PackageReference Include="MySql.Data" Version="8.2.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />

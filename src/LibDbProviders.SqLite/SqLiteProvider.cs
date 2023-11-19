@@ -79,9 +79,9 @@ namespace Bau.Libraries.LibDbProviders.SqLite
 		/// <summary>
 		///		Obtiene el esquema
 		/// </summary>
-		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(TimeSpan timeout, CancellationToken cancellationToken)
+		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			return await new Parser.SqLiteSchemaReader().GetSchemaAsync(this, timeout, cancellationToken);
+			return await new Parser.SqLiteSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
 		}
 
 		/// <summary>

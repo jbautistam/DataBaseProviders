@@ -19,7 +19,7 @@ namespace Bau.Libraries.LibDbProviders.SqLite.Parser
 		/// <summary>
 		///		Carga el esquema
 		/// </summary>
-		internal async Task<SchemaDbModel> GetSchemaAsync(SqLiteProvider provider, TimeSpan timeout, CancellationToken cancellationToken)
+		internal async Task<SchemaDbModel> GetSchemaAsync(SqLiteProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
 		{
 			SchemaDbModel schema = new SchemaDbModel();
 

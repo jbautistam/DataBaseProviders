@@ -66,9 +66,9 @@ namespace Bau.Libraries.LibDbProviders.Spark
 		/// <summary>
 		///		Obtiene el esquema
 		/// </summary>
-		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(TimeSpan timeout, CancellationToken cancellationToken)
+		public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
 		{
-			return await new Parser.SparkSchemaReader().GetSchemaAsync(this, timeout, cancellationToken);
+			return await new Parser.SparkSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
 		}
 
 		/// <summary>
