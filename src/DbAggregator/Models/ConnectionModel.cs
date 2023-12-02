@@ -25,7 +25,9 @@ public class ConnectionModel : LibDataStructures.Base.BaseExtendedModel
 		/// <summary>MySql</summary>
 		MySql,
 		/// <summary>Spark</summary>
-		Spark
+		Spark,
+		/// <summary>DuckDb</summary>
+		DuckDb
 	}
 
 	public ConnectionModel(string key, string type)

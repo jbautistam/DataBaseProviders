@@ -21,10 +21,7 @@ public class ProviderModel
 	/// <summary>
 	///		Clona el proveedor
 	/// </summary>
-	public ProviderModel Clone()
-	{
-		return new ProviderModel(Key, Type, Provider);
-	}
+	public ProviderModel Clone() => new ProviderModel(Key, Type, Provider);
 
 	/// <summary>
 	///		Obtiene un valor de un comando
@@ -136,9 +133,9 @@ public class ProviderModel
 	/// <summary>
 	///		Ejecuta un comando de lectura de un escalar
 	/// </summary>
-	public object ExecuteScalar(CommandModel command)
+	public object? ExecuteScalar(CommandModel command)
 	{
-		object result;
+		object? result;
 
 			// Abre la conexión
 			Provider.Open();

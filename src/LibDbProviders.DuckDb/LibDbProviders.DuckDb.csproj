@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+    <RootNamespace>Bau.Libraries.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DuckDB.NET.Data.Full" Version="0.9.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -8,6 +8,25 @@ public class SchemaDbModel
 	/// <summary>
 	///		Añade una tabla / vista a la colección del esquema
 	/// </summary>
+	public BaseTableDbModel? Add(bool isTable, string? schema, string? tableName)
+	{
+		BaseTableDbModel? table = null;
+
+			// Normaliza los datos
+			schema = schema ?? string.Empty;
+			// Añade el elemento
+			if (!string.IsNullOrWhiteSpace(tableName))
+				if (isTable)
+					table = Add(Tables, schema, tableName);
+				else
+					table = Add(Views, schema, tableName);
+			// Devuelve la tabla / vista
+			return table;
+	}
+
+	/// <summary>
+	///		Añade una tabla / vista a la colección del esquema
+	/// </summary>
 	public BaseTableDbModel? Add(bool isTable, string? schema, string? tableName, string? fieldName, 
 								FieldDbModel.Fieldtype fieldType, string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 	{
@@ -26,18 +45,28 @@ public class SchemaDbModel
 	}
 
 	/// <summary>
+	///		Añade la tabla a la colección
+	/// </summary>
+	private TableDbModel Add(List<TableDbModel> tables, string? schema, string? tableName) => Search(tables, schema, tableName);
+
+	/// <summary>
 	///		Añade la tabla a la colección y un campo a la tabla
 	/// </summary>
 	private TableDbModel Add(List<TableDbModel> tables, string? schema, string? tableName, string? fieldName, FieldDbModel.Fieldtype fieldType, 
 							 string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 	{
-		TableDbModel table = Search(tables, schema, tableName);
+		TableDbModel table = Add(tables, schema, tableName);
 
 			// Añade un campo a la tabla
 			table.AddField(fieldName, fieldType, fieldDbType, fieldLength, isPrimaryKey, isRequired);
 			// Devuelve la tabla
 			return table;
 	}
+
+	/// <summary>
+	///		Añade una vista a la colección
+	/// </summary>
+	private ViewDbModel Add(List<ViewDbModel> views, string? schema, string? name) => Search(views, schema, name);
 
 	/// <summary>
 	///		Añade la vista a la colección y un campo a la vista

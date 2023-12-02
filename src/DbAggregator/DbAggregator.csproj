@@ -11,6 +11,7 @@
 	  <ProjectReference Include="..\..\..\..\Common\LibDataStructures\src\LibDataStructures.csproj" />
 	  <ProjectReference Include="..\..\..\..\Common\LibHelper\src\LibHelper.csproj" />
 	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
+	  <ProjectReference Include="..\LibDbProviders.DuckDb\LibDbProviders.DuckDb.csproj" />
 	  <ProjectReference Include="..\LibDbProviders.MySql\LibDbProviders.MySql.csproj" />
 	  <ProjectReference Include="..\LibDbProviders.Odbc\LibDbProviders.Odbc.csproj" />
 	  <ProjectReference Include="..\LibDbProviders.PostgreSql\LibDbProviders.PostgreSql.csproj" />

@@ -8,6 +8,10 @@ public abstract class DbConnectionStringBase : IConnectionString
 	// Variables privadas
 	private string _connectionString = string.Empty;
 
+	protected DbConnectionStringBase()
+	{
+	}
+
 	protected DbConnectionStringBase(string connectionString)
 	{ 
 		ConnectionString = connectionString;

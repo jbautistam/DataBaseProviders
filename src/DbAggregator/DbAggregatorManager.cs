@@ -58,15 +58,14 @@ public class DbAggregatorManager
 				return GetMySqlDataProvider(connection.Key, connection.Parameters);
 			else if (IsConnection(ConnectionModel.DataBaseType.Spark))
 				return GetSparkDataProvider(connection.Key, connection.Parameters);
+			else if (IsConnection(ConnectionModel.DataBaseType.DuckDb))
+				return GetDuckDbDataProvider(connection.Key, connection.Parameters);
 		}
 		// Si ha llegado hasta aquí es porque no ha encontrado ningún proveedor válido
 		return null;
 
 		// Comprueba el tipo de conexión
-		bool IsConnection(ConnectionModel.DataBaseType type)
-		{
-			return connection.Type.Equals(type.ToString(), StringComparison.CurrentCultureIgnoreCase);
-		}
+		bool IsConnection(ConnectionModel.DataBaseType type) => connection.Type.Equals(type.ToString(), StringComparison.CurrentCultureIgnoreCase);
 	}
 
 	/// <summary>
@@ -144,7 +143,16 @@ public class DbAggregatorManager
 	}
 
 	/// <summary>
+	///		Obtiene el proveedor agregado de DuckDb
+	/// </summary>
+	private ProviderModel GetDuckDbDataProvider(string key, NormalizedDictionary<string> parameters)
+	{
+		return new ProviderModel(key, ConnectionModel.DataBaseType.DuckDb.ToString(), 
+								 new LibDbProviders.DuckDb.DuckDbProvider(new LibDbProviders.DuckDb.DuckDbConnectionString(parameters.ToDictionary())));
+	}
+
+	/// <summary>
 	///		Conexiones
 	/// </summary>
-	public NormalizedDictionary<ProviderModel> Providers { get; } = new NormalizedDictionary<ProviderModel>();
+	public NormalizedDictionary<ProviderModel> Providers { get; } = new();
 }
