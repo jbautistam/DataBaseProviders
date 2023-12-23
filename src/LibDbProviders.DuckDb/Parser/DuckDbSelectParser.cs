@@ -22,12 +22,12 @@ internal class DuckDbSelectParser : Base.SqlTools.BaseSqlHelper
 	/// <summary>
 	///		Separador inicial para el nombre de campos tablas
 	/// </summary>
-	public override string SeparatorStart { get; } = "[";
+	public override string SeparatorStart { get; } = "\"";
 
 	/// <summary>
 	///		Separador inicial para el nombre de campos tablas
 	/// </summary>
-	public override string SeparatorEnd { get; } = "[";
+	public override string SeparatorEnd { get; } = "\"";
 
 	/// <summary>
 	///		Prefijos de los parámetros

@@ -6,7 +6,7 @@
 		<RootNamespace>Bau.Libraries.LibDbProviders.Spark</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.Data.Odbc" Version="7.0.0" />
+	  <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
