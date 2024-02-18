@@ -50,10 +50,7 @@ public abstract class DbConnectionStringBase : IConnectionString
 	/// <summary>
 	///		Comprueba si dos cadenas son iguales (sin tener en cuenta las mayúsculas)
 	/// </summary>
-	protected bool IsEqual(string first, string second)
-	{
-		return Trim(first).Equals(Trim(second), StringComparison.CurrentCultureIgnoreCase);
-	}
+	protected bool IsEqual(string first, string second) => Trim(first).Equals(Trim(second), StringComparison.CurrentCultureIgnoreCase);
 
 	/// <summary>
 	///		Quita los espacios de una cadena
