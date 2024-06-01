@@ -28,7 +28,7 @@ public class DuckDbProvider : DbProviderBase
 	protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 	{
 		if (Connection is DuckDBConnection connection)
-			return new DuckDbCommand(text, connection);
+			return new DuckDBCommand(text, connection);
 		else
 			throw new ArgumentException("Connection database type unknown");
 	}
