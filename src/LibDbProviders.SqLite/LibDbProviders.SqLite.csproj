@@ -6,7 +6,7 @@
 		<RootNamespace>Bau.Libraries.LibDbProviders.SqLite</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+	  <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\LibDbProviders.Base\LibDbProviders.Base.csproj" />
