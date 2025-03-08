@@ -49,16 +49,17 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	public List<TypeData> LoadCollection(string text, ParametersDbCollection? parameters,
 										 CommandType commandType, AssignDataCallBack callBack)
 	{
-		List<TypeData> results = new List<TypeData>();
+		List<TypeData> results = [];
 
 			// Abre la conexión
 			Connection.Open();
 			// Carga los datos
-			using (IDataReader data = Connection.ExecuteReader(text, parameters ?? new ParametersDbCollection(), commandType))
+			using (IDataReader rdoData = Connection.ExecuteReader(text, parameters ?? new ParametersDbCollection(), commandType))
 			{ 
 				// Lee los datos
-				while (data.Read())
-					results.Add((TypeData)callBack(data));
+				while (rdoData.Read())
+					if (callBack(rdoData) is TypeData readed)
+						results.Add(readed);
 			}
 			// Cierra la conexión
 			Connection.Close();
@@ -119,7 +120,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga un objeto utilizando genéricos
 	/// </summary>
-	public TypeData LoadObject(string text, ParametersDbCollection parametersDB,
+	public TypeData? LoadObject(string text, ParametersDbCollection parametersDB,
 							   CommandType commandType, AssignDataCallBack callBack)
 	{
 		TypeData data;
@@ -128,6 +129,33 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			Connection.Open();
 			// Lee los datos
 			using (IDataReader reader = Connection.ExecuteReader(text, parametersDB, commandType))
+			{ 
+				// Lee los datos
+				if (reader.Read())
+					data = (TypeData) callBack(reader);
+				else
+					data = (TypeData) callBack(null);
+				// Cierra el recordset
+				reader.Close();
+			}
+			// Cierra la conexión
+			Connection.Close();
+			// Devuelve el objeto
+			return data;
+	}
+
+	/// <summary>
+	///		Carga un objeto utilizando genéricos
+	/// </summary>
+	public async Task<TypeData?> LoadObjectAsync(string text, ParametersDbCollection parametersDB, CommandType commandType, 
+												 AssignDataCallBack callBack, CancellationToken cancellationToken)
+	{
+		TypeData? data;
+
+			// Abre la conexión
+			Connection.Open();
+			// Lee los datos
+			using (IDataReader reader = await Connection.ExecuteReaderAsync(text, parametersDB, commandType, null, cancellationToken))
 			{ 
 				// Lee los datos
 				if (reader.Read())
@@ -212,6 +240,23 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	}
 
 	/// <summary>
+	///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
+	/// </summary>
+	public async Task<object?> ExecuteScalarAsync(QueryModel query, CancellationToken cancellationToken)
+	{
+		object? result;
+
+			// Abre la conexión
+			await Connection.OpenAsync(cancellationToken);
+			// Ejecuta sobre la conexión
+			result = Connection.ExecuteScalarAsync(query.Sql, query.Parameters, query.CommandType, query.Timeout, cancellationToken);
+			// Cierra la conexión
+			Connection.Close();
+			// Devuelve el resultado
+			return result;
+	}
+
+	/// <summary>
 	///		Ejecuta sobre una conexión para obtener una identidad
 	/// </summary>
 	public int? ExecuteGetIdentity(string text, ParametersDbCollection parametersDB, CommandType commandType = CommandType.Text)
@@ -228,6 +273,25 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			Connection.Close();
 			// Devuelve el valor identidad
 			return intIdentity;
+	}
+
+	/// <summary>
+	///		Ejecuta sobre una conexión para obtener una identidad
+	/// </summary>
+	public async Task<int?> ExecuteGetIdentityAsync(QueryModel query, CancellationToken cancellationToken)
+	{
+		int? identity;
+
+			// Abre la conexión
+			await Connection.OpenAsync(cancellationToken);
+			// Ejecuta sobre la conexión
+			await Connection.ExecuteAsync(query.Sql, query.Parameters, query.CommandType, query.Timeout, cancellationToken);
+			// Obtiene el valor identidad
+			identity = GetIdentityValue(query.Parameters);
+			// Cierra la conexión
+			Connection.Close();
+			// Devuelve el valor identidad
+			return identity;
 	}
 
 	/// <summary>

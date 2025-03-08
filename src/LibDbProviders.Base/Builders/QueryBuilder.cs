@@ -7,9 +7,33 @@ namespace Bau.Libraries.LibDbProviders.Base.Builders;
 /// </summary>
 public class QueryBuilder
 {
+	public QueryBuilder() : this(string.Empty) {}
+
 	public QueryBuilder(string sql, QueryModel.QueryType type = QueryModel.QueryType.Text)
 	{
 		Query = new QueryModel(sql, type);
+	}
+
+	/// <summary>
+	///		Asigna la cadena SQL
+	/// </summary>
+	public QueryBuilder WithSql(string sql)
+	{
+		// Asigna la cadena SQL
+		Query.Sql = sql;
+		// Devuelve el generador
+		return this;
+	}
+
+	/// <summary>
+	///		Asigna el tipo de comando
+	/// </summary>
+	public QueryBuilder WithCommandType(QueryModel.QueryType type)
+	{
+		// Asigna el tipo
+		Query.Type = type;
+		// Devuelve el generador
+		return this;
 	}
 
 	/// <summary>

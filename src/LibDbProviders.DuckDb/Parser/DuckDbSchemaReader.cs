@@ -55,13 +55,13 @@ internal class DuckDbSchemaReader
 
 						if (includeSystemTables || !isSystemTable)
 						{
-							BaseTableDbModel? table = schema.Add(!(rdoData.IisNull<string>("table_type") ?? "Unknown").Equals(" VIEW", StringComparison.CurrentCultureIgnoreCase),
+							BaseTableDbModel? table = schema.Add(!(rdoData.IisNull<string>("table_type") ?? "Unknown").Equals("VIEW", StringComparison.CurrentCultureIgnoreCase),
 																 rdoData.IisNull<string>("table_schema"),
 																 rdoData.IisNull<string>("table_name"));
 
-							// Indica si es una tabla de sistema
-							if (table is not null)
-								table.IsSystem = isSystemTable;
+								// Indica si es una tabla de sistema
+								if (table is not null)
+									table.IsSystem = isSystemTable;
 						}
 				}
 			}
@@ -120,15 +120,30 @@ internal class DuckDbSchemaReader
 	/// </summary>
 	private FieldDbModel.Fieldtype GetFieldType(string? columnType)
 	{
-		return (columnType ?? string.Empty).ToUpper() switch
+		return Normalize(columnType ?? string.Empty) switch
 					{
 						null => FieldDbModel.Fieldtype.Unknown,
-						"INT2" or "_INT2" or "INT4" or "_INT4" or "INT8" or "_INT8" => FieldDbModel.Fieldtype.Integer,
-						"FLOAT4" or "_FLOAT4" or "FLOAT8" or "_FLOAT8" => FieldDbModel.Fieldtype.Decimal,
-						"CHAR" or "_CHAR" or "TEXT" or "_TEXT" or "VARCHAR" => FieldDbModel.Fieldtype.String,
-						"DATE" => FieldDbModel.Fieldtype.Date,
-						"BOOL" => FieldDbModel.Fieldtype.Boolean,
+						"INT2" or "_INT2" or "INT4" or "_INT4" or "INT8" or "_INT8" or "INTEGER" or "BIGINT" => FieldDbModel.Fieldtype.Integer,
+						"FLOAT4" or "_FLOAT4" or "FLOAT8" or "_FLOAT8" or "DECIMAL" => FieldDbModel.Fieldtype.Decimal,
+						"CHAR" or "_CHAR" or "TEXT" or "_TEXT" or "VARCHAR" or "UUID" => FieldDbModel.Fieldtype.String,
+						"DATE" or "TIMESTAMP" => FieldDbModel.Fieldtype.Date,
+						"BOOL" or "BOOLEAN" => FieldDbModel.Fieldtype.Boolean,
 						_ => FieldDbModel.Fieldtype.Unknown
 					};
+
+		// Normaliza la cadena
+		string Normalize(string type)
+		{
+			int index;
+
+				// Pasa el tipo a mayúsculas
+				type = type.ToUpper();
+				// Quita los paréntesis
+				index = type.IndexOf('(');
+				if (index > 0)
+					type = type.Substring(0, index);
+				// Devuelve el tipo normalizado
+				return type.Trim();
+		}
 	}
 }

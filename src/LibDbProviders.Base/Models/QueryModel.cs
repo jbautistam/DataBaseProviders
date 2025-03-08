@@ -29,17 +29,33 @@ public class QueryModel
 	/// <summary>
 	///		Consulta SQL o script
 	/// </summary>
-	public string Sql { get; }
+	public string Sql { get; set; }
 
 	/// <summary>
 	///		Tipo de consulta
 	/// </summary>
-	public QueryType Type { get; }
+	public QueryType Type { get; set; }
+
+	/// <summary>
+	///		Tipo de comando
+	/// </summary>
+	internal System.Data.CommandType CommandType
+	{
+		get
+		{
+			return Type switch
+					{
+						QueryType.StoredProcedure => System.Data.CommandType.StoredProcedure,
+						QueryType.Table => System.Data.CommandType.TableDirect,
+						_ => System.Data.CommandType.Text
+					};
+		}
+	}
 
 	/// <summary>
 	///		Argumentos / parámetros de la consulta
 	/// </summary>
-	public ParametersDbCollection Parameters { get; } = new();
+	public ParametersDbCollection Parameters { get; } = [];
 
 	/// <summary>
 	///		Tiempo de espera de la consulta

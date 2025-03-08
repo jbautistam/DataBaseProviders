@@ -5,7 +5,7 @@ using Bau.Libraries.LibDbProviders.Base.Models;
 namespace Bau.Libraries.LibDbProviders.Base.RepositoryData;
 
 // Delegados públicos de este espacio de nombres
-public delegate object AssignDataCallBack(IDataReader? data);
+public delegate object? AssignDataCallBack(IDataReader? data);
 
 /// <summary>
 ///		Interface para los objetos de repositorio
