@@ -172,6 +172,31 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	}
 
 	/// <summary>
+	///		Carga una colección utilizando genéricos
+	/// </summary>
+	public async Task<List<TypeData>> LoadCollectionAsync(string text, ParametersDbCollection parametersDB, CommandType commandType, 
+														  AssignDataCallBack callBack, CancellationToken cancellationToken)
+	{
+		List<TypeData> data = [];
+
+			// Abre la conexión
+			await Connection.OpenAsync(cancellationToken);
+			// Lee los datos
+			using (IDataReader reader = await Connection.ExecuteReaderAsync(text, parametersDB, commandType, null, cancellationToken))
+			{ 
+				// Lee los datos
+				while (reader.Read())
+					data.Add((TypeData) callBack(reader));
+				// Cierra el recordset
+				reader.Close();
+			}
+			// Cierra la conexión
+			Connection.Close();
+			// Devuelve el objeto
+			return data;
+	}
+
+	/// <summary>
 	///		Carga un objeto utilizando genéricos para un procedimiento con un único parámetro alfanumérico
 	/// </summary>
 	public int Execute(string text, string Parameter, string parameterValue, int parameterLength,
