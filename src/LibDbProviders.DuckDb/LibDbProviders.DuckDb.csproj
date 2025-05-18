@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="DuckDB.NET.Data.Full" Version="1.2.0" />
+	  <PackageReference Include="DuckDB.NET.Data.Full" Version="1.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
