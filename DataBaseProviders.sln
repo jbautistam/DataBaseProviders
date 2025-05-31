@@ -3,19 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Base", "LibDbProviders.Base\LibDbProviders.Base.csproj", "{A8462A3B-32FC-4475-9F58-0D58E65EF93E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Base", "src\LibDbProviders.Base\LibDbProviders.Base.csproj", "{A8462A3B-32FC-4475-9F58-0D58E65EF93E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.SqLite", "LibDbProviders.SqLite\LibDbProviders.SqLite.csproj", "{1C8571AA-BDA7-4DAE-AE87-16071D58ED4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.SqLite", "src\LibDbProviders.SqLite\LibDbProviders.SqLite.csproj", "{1C8571AA-BDA7-4DAE-AE87-16071D58ED4C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.MySql", "LibDbProviders.MySql\LibDbProviders.MySql.csproj", "{1AC3AF22-7C16-421A-A568-BD08AD8C3536}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.MySql", "src\LibDbProviders.MySql\LibDbProviders.MySql.csproj", "{1AC3AF22-7C16-421A-A568-BD08AD8C3536}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Odbc", "LibDbProviders.Odbc\LibDbProviders.Odbc.csproj", "{331FAC47-1A9B-4873-82AC-1666E55EA6E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Odbc", "src\LibDbProviders.Odbc\LibDbProviders.Odbc.csproj", "{331FAC47-1A9B-4873-82AC-1666E55EA6E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.PostgreSql", "LibDbProviders.PostgreSql\LibDbProviders.PostgreSql.csproj", "{9FC402DF-F48B-412A-81E8-EC66A79E704B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.PostgreSql", "src\LibDbProviders.PostgreSql\LibDbProviders.PostgreSql.csproj", "{9FC402DF-F48B-412A-81E8-EC66A79E704B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Spark", "LibDbProviders.Spark\LibDbProviders.Spark.csproj", "{1099AC9D-D36A-40E1-8460-B6E1D0EF177F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.Spark", "src\LibDbProviders.Spark\LibDbProviders.Spark.csproj", "{1099AC9D-D36A-40E1-8460-B6E1D0EF177F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.SqlServer", "LibDbProviders.SqlServer\LibDbProviders.SqlServer.csproj", "{AB70250C-0894-4AFD-9F1D-FA0E2192F055}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibDbProviders.SqlServer", "src\LibDbProviders.SqlServer\LibDbProviders.SqlServer.csproj", "{AB70250C-0894-4AFD-9F1D-FA0E2192F055}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibDbProviders.DuckDb", "src\LibDbProviders.DuckDb\LibDbProviders.DuckDb.csproj", "{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbAggregator", "src\DbAggregator\DbAggregator.csproj", "{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +115,30 @@ Global
 		{AB70250C-0894-4AFD-9F1D-FA0E2192F055}.Pruebas|Any CPU.Build.0 = Debug|Any CPU
 		{AB70250C-0894-4AFD-9F1D-FA0E2192F055}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB70250C-0894-4AFD-9F1D-FA0E2192F055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.CosmosLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.CosmosLocal|Any CPU.Build.0 = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Integracion|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Integracion|Any CPU.Build.0 = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Produccion|Any CPU.ActiveCfg = Release|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Produccion|Any CPU.Build.0 = Release|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Pruebas|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Pruebas|Any CPU.Build.0 = Debug|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D108CB9-9524-8FCA-B837-7C13FDB6AE51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.CosmosLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.CosmosLocal|Any CPU.Build.0 = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Integracion|Any CPU.ActiveCfg = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Integracion|Any CPU.Build.0 = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Produccion|Any CPU.ActiveCfg = Release|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Produccion|Any CPU.Build.0 = Release|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Pruebas|Any CPU.ActiveCfg = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Pruebas|Any CPU.Build.0 = Debug|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19BFAE7A-6A7A-703F-1AA9-2520E2D0BA15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
