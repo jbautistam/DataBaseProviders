@@ -152,7 +152,7 @@ public class ProviderModel
 	/// </summary>
 	private ParametersDbCollection GetParametersDb(Dictionary<string, object?> parameters)
 	{
-		ParametersDbCollection parametersDB = new ParametersDbCollection();
+		ParametersDbCollection parametersDB = [];
 
 			// Asigna los parámetros
 			if (parameters is not null)
@@ -188,14 +188,6 @@ public class ProviderModel
 			return $"[{name}]";
 		else
 			return name;
-	}
-
-	/// <summary>
-	///		Carga el esquema de la base de datos (síncrono)
-	/// </summary>
-	public SchemaDbModel LoadSchema(bool includeSystemTables)
-	{
-		return Task.Run(async () => await LoadSchemaAsync(includeSystemTables, TimeSpan.FromMinutes(2), CancellationToken.None)).Result;
 	}
 
 	/// <summary>

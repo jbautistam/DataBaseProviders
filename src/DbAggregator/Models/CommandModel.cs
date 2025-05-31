@@ -35,5 +35,5 @@ public class CommandModel
 	/// <summary>
 	///		Parámetros
 	/// </summary>
-	public Dictionary<string, object?> Parameters { get; set; } = new();
+	public Dictionary<string, object?> Parameters { get; set; } = [];
 }
