@@ -68,15 +68,15 @@ public abstract class DbProviderBase : IDbProvider
 			// Devuelve el comando
 			return command;
 
-			// Obtiene el comando teniendo en cuenta la paginación
-			DbCommand GetSqlCommand(QueryModel query)
-			{
-				if (query.Pagination.MustPaginate && query.Type == QueryModel.QueryType.Text && SqlHelper != null)
-					return GetCommand(SqlHelper.GetSqlPagination(query.Sql, query.Pagination.Page - 1, query.Pagination.PageSize), 
-									  query.Timeout);
-				else
-					return GetCommand(query.Sql, query.Timeout);
-			}
+		// Obtiene el comando teniendo en cuenta la paginación
+		DbCommand GetSqlCommand(QueryModel query)
+		{
+			if (query.Pagination.MustPaginate && query.Type == QueryModel.QueryType.Text && SqlHelper != null)
+				return GetCommand(SqlHelper.GetSqlPagination(query.Sql, query.Pagination.Page - 1, query.Pagination.PageSize), 
+									query.Timeout);
+			else
+				return GetCommand(query.Sql, query.Timeout);
+		}
 	}
 
 	/// <summary>
@@ -171,10 +171,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// <remarks>
 	///		Sólo está implementado totalmente para los comandos de texto, no para los procedimientos almacenados
 	/// </remarks>
-	public IDataReader ExecuteReader(QueryModel query)
-	{
-		return PrepareCommand(query).ExecuteReader();
-	}
+	public IDataReader ExecuteReader(QueryModel query) => PrepareCommand(query).ExecuteReader();
 
 	/// <summary>
 	///		Obtiene un DataReader de forma asíncrona
@@ -253,7 +250,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// </summary>
 	public DataTable GetDataTable(QueryModel query)
 	{
-		DataTable table = new DataTable();
+		DataTable table = new();
 
 			// Carga los datos de la tabla
 			table.Load(ExecuteReader(query), LoadOption.OverwriteChanges);
@@ -274,7 +271,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// </summary>
 	public async Task<DataTable> GetDataTableAsync(QueryModel query, CancellationToken? cancellationToken = null)
 	{
-		DataTable table = new DataTable();
+		DataTable table = new();
 
 			// Carga los datos de la tabla
 			table.Load(await ExecuteReaderAsync(query, cancellationToken), LoadOption.OverwriteChanges);
@@ -378,8 +375,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// <summary>
 	///		Obtiene el número de registros de una consulta
 	/// </summary>
-	public async Task<long?> GetRecordsCountAsync(string sql, ParametersDbCollection? parametersDB, 
-												  TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
+	public async Task<long?> GetRecordsCountAsync(string sql, ParametersDbCollection? parametersDB, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 	{
 		return await GetRecordsCountAsync(ConvertQuery(sql, parametersDB, CommandType.Text, 0, 0, timeout), cancellationToken);
 	}
@@ -387,8 +383,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// <summary>
 	///		Copia masiva de datos en una tabla
 	/// </summary>
-	public virtual long BulkCopy(IDataReader reader, string table, Dictionary<string, string> mappings, 
-								 int recordsPerBlock = 30_000, TimeSpan? timeout = null)
+	public virtual long BulkCopy(IDataReader reader, string table, Dictionary<string, string> mappings, int recordsPerBlock = 30_000, TimeSpan? timeout = null)
 	{
 		return new SqlTools.SqlBulkCopy().Process(this, reader, table, mappings, recordsPerBlock, timeout);
 	}
@@ -411,7 +406,7 @@ public abstract class DbProviderBase : IDbProvider
 		// Limpia los parámetros antiguos
 		command.Parameters.Clear();
 		// Añade los parámetros nuevos
-		if (parameters != null)
+		if (parameters is not null)
 			foreach (ParameterDb parameter in parameters)
 				command.Parameters.Add(GetSQLParameter(parameter));
 	}
@@ -460,7 +455,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// </summary>
 	private ParametersDbCollection ReadOutputParameters(IDataParameterCollection outputParameters)
 	{
-		ParametersDbCollection parameters = new();
+		ParametersDbCollection parameters = [];
 
 			// Recupera los parámetros
 			foreach (IDataParameter outputParameter in outputParameters)
@@ -517,7 +512,7 @@ public abstract class DbProviderBase : IDbProvider
 	/// <summary>
 	///		Obtiene el esquema de base de datos de forma asíncrona
 	/// </summary>
-	public abstract Task<Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken);
+	public abstract Task<Schema.SchemaDbModel> GetSchemaAsync(Schema.SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken);
 	
 	/// <summary>
 	///		Convierte un tipo de comando

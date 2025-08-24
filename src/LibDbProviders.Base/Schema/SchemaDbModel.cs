@@ -28,7 +28,7 @@ public class SchemaDbModel
 	///		Añade una tabla / vista a la colección del esquema
 	/// </summary>
 	public BaseTableDbModel? Add(bool isTable, string? schema, string? tableName, string? fieldName, 
-								FieldDbModel.Fieldtype fieldType, string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
+								 FieldDbModel.Fieldtype fieldType, string? fieldDbType, int fieldLength, bool isPrimaryKey, bool isRequired)
 	{
 		BaseTableDbModel? table = null;
 
@@ -133,20 +133,20 @@ public class SchemaDbModel
 	/// <summary>
 	///		Tablas de la base de datos
 	/// </summary>
-	public List<TableDbModel> Tables { get; } = new();
+	public List<TableDbModel> Tables { get; } = [];
 
 	/// <summary>
 	///		Vistas de la base de datos
 	/// </summary>
-	public List<ViewDbModel> Views { get; } = new();
+	public List<ViewDbModel> Views { get; } = [];
 
 	/// <summary>
 	///		Rutinas de la base de datos
 	/// </summary>
-	public List<RoutineDbModel> Routines { get; } = new();
+	public List<RoutineDbModel> Routines { get; } = [];
 
 	/// <summary>
 	///		Desencadenadores de la base de datos
 	/// </summary>
-	public List<TriggerDbModel> Triggers { get; } = new();
+	public List<TriggerDbModel> Triggers { get; } = [];
 }

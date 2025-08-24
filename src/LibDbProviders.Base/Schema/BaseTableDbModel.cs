@@ -15,7 +15,10 @@ public abstract class BaseTableDbModel : BaseSchemaDbModel
 			// Si no existía el campo, se crea
 			if (field is null)
 			{
-				field = new FieldDbModel { Name = name };
+				field = new FieldDbModel 
+								{ 
+									Name = name 
+								};
 				Fields.Add(field);
 			}
 			// Asigna las propiedades
@@ -34,5 +37,5 @@ public abstract class BaseTableDbModel : BaseSchemaDbModel
 	/// <summary>
 	///		Campos de la tabla
 	/// </summary>
-	public List<FieldDbModel> Fields { get; } = new();
+	public List<FieldDbModel> Fields { get; } = [];
 }

@@ -8,18 +8,12 @@ public abstract class SqlSelectParserBase
 	/// <summary>
 	///		Obtiene una cadena SQL que cuenta los elementos resultantes de una consulta
 	/// </summary>
-	public virtual string GetSqlCount(string sql)
-	{
-		return $"SELECT COUNT(*) FROM ({GetSqlWithoutOrderBy(Normalize(sql))}) AS tmpQuery";
-	}
+	public virtual string GetSqlCount(string sql) => $"SELECT COUNT(*) FROM ({GetSqlWithoutOrderBy(Normalize(sql))}) AS tmpQuery";
 
 	/// <summary>
 	///		Elimina la sección ORDER BY de la consulta
 	/// </summary>
-	protected string GetSqlWithoutOrderBy(string sql)
-	{
-		return Cut(sql, "ORDER BY", out _).Trim();
-	}
+	protected string GetSqlWithoutOrderBy(string sql) => Cut(sql, "ORDER BY", out _).Trim();
 
 	/// <summary>
 	///		Obtiene la cadena SQL necesaria para paginar

@@ -48,6 +48,11 @@ public class FieldDbModel : BaseSchemaDbModel
 	public bool IsKey { get; set; }
 
 	/// <summary>
+	///		Indica si el campo es clave foránea
+	/// </summary>
+	public bool IsForeignKey { get; set; }
+
+	/// <summary>
 	///		Longitud del campo
 	/// </summary>
 	public int Length { get; set; }

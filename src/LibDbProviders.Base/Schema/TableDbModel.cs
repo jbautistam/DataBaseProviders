@@ -8,5 +8,5 @@ public class TableDbModel : BaseTableDbModel
 	/// <summary>
 	///		Restricciones
 	/// </summary>
-	public List<ConstraintDbModel> Constraints { get; } = new List<ConstraintDbModel>();
+	public List<ConstraintDbModel> Constraints { get; } = [];
 }

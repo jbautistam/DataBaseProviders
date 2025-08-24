@@ -2,7 +2,6 @@
 using System.Data.Common;
 
 using Bau.Libraries.LibDbProviders.Base.Extensors;
-using Bau.Libraries.LibDbProviders.Base.Models;
 using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.SqlServer.Parser;
@@ -15,103 +14,128 @@ internal class SqlServerSchemaReader
 	/// <summary>
 	///		Clase para la carga de un esquema de una base de datos SQL Server
 	/// </summary>
-	internal async Task<SchemaDbModel> GetSchemaAsync(SqlServerProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	internal async Task<SchemaDbModel> GetSchemaAsync(SqlServerProvider provider, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
 		SchemaDbModel schema = new();
 
 			// Carga los datos del esquema
-			using (SqlServerProvider connection = new SqlServerProvider(provider.ConnectionString))
+			using (SqlServerProvider connection = new(provider.ConnectionString))
 			{
 				// Abre la conexión
 				await connection.OpenAsync(cancellationToken);
 				// Carga los datos del esquema
-				await LoadTablesAsync(connection, schema, timeout, cancellationToken);
-				await LoadTriggersAsync(connection, schema, timeout, cancellationToken);
-				await LoadViewsAsync(connection, schema, timeout, cancellationToken);
-				await LoadRoutinesAsync(connection, schema, timeout, cancellationToken);
+				if (options.IncludeTables)
+					await LoadTablesAndColumnsAsync(connection, schema, options, timeout, cancellationToken);
+				if (options.IncludeTriggers)
+					await LoadTriggersAsync(connection, schema, timeout, cancellationToken);
+				//if (options.IncludeViews)
+				//	await LoadViewsAsync(connection, schema, timeout, cancellationToken);
+				if (options.IncludeRoutines)
+					await LoadRoutinesAsync(connection, schema, timeout, cancellationToken);
 			}
 			// Devuelve el esquema
 			return schema;
 	}
 
 	/// <summary>
-	///		Carga las tablas de un esquema
+	///		Carga las tablas, vistas y columnas de un esquema
 	/// </summary>
-	private async Task LoadTablesAsync(SqlServerProvider connection, SchemaDbModel schema, TimeSpan timeout, CancellationToken cancellationToken)
+	private async Task LoadTablesAndColumnsAsync(SqlServerProvider connection, SchemaDbModel schema, SchemaOptions options, TimeSpan timeout, 
+												 CancellationToken cancellationToken)
 	{
-		//? Esta consulta duplica las tablas porque all_objects no distingue por esquema
-		//string sql = @"SELECT Tables.TABLE_CATALOG, Tables.TABLE_SCHEMA, Tables.TABLE_NAME,
-		//					   Tables.TABLE_TYPE, Objects.Create_Date, Objects.Modify_Date, Properties.Value AS Description
-		//				  FROM INFORMATION_SCHEMA.TABLES AS Tables INNER JOIN sys.all_objects AS Objects
-		//						ON Tables.Table_Name = Objects.name
-		//					LEFT JOIN sys.extended_properties AS Properties
-		//						ON Objects.object_id = Properties.major_id
-		//							AND Properties.minor_id = 0
-		//							AND Properties.name = 'MS_Description'
-		//				 ORDER BY Tables.TABLE_NAME";
-		string sql = @"SELECT Tables.TABLE_CATALOG, Tables.TABLE_SCHEMA, Tables.TABLE_NAME,
-								  Tables.TABLE_TYPE, NULL AS Create_Date, NULL AS Modify_Date, NULL AS Description
-							  FROM INFORMATION_SCHEMA.TABLES AS Tables
-							  ORDER BY Tables.TABLE_NAME";
+		string sql = """
+						SELECT [Tables].Table_Catalog, [Tables].Table_Schema, [Tables].Table_Name, [Tables].Table_Type,
+								[Columns].Column_Name, [Columns].Ordinal_Position, [Columns].Column_Default, [Columns].Is_Nullable, [Columns].Data_Type,
+								[Columns].Character_Maximum_Length,
+								CAST([Columns].Numeric_Precision AS int) AS Numeric_Precision,
+								CAST([Columns].Numeric_Precision_Radix AS int) AS Numeric_Precision_Radix,
+								CAST([Columns].Numeric_Scale AS int) AS Numeric_Scale,
+								CAST([Columns].DateTime_Precision AS int) AS DateTime_Precision,
+								[Columns].Character_Set_Name, [Columns].Collation_Catalog, [Columns].Collation_Schema, [Columns].Collation_Name
+							FROM [Information_Schema].[Tables] INNER JOIN [Information_Schema].[Columns]
+							ON [Tables].Table_Catalog = [Columns].Table_Catalog
+								AND [Tables].Table_Schema = [Columns].Table_Schema
+								AND [Tables].Table_Name = [Columns].Table_Name
+						""";
 
-			// Carga las tablas
+			// Carga las tablas / vistas
 			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, null, CommandType.Text, timeout, cancellationToken))
 			{ 
 				// Recorre la colección de registros
 				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
 				{
-					TableDbModel table = new TableDbModel();
+					bool isView = (reader.IisNull<string>("Table_Type") ?? string.Empty).Equals("VIEW", StringComparison.CurrentCultureIgnoreCase);
+					BaseTableDbModel? tableView = schema.Add(!isView, reader.IisNull<string>("TABLE_SCHEMA"), reader.IisNull<string>("TABLE_NAME"));
 
-						// Asigna los datos del registro al objeto
-						table.Catalog = reader.IisNull<string>("TABLE_CATALOG");
-						table.Schema = reader.IisNull<string>("TABLE_SCHEMA");
-						table.Name = reader.IisNull<string>("TABLE_NAME");
-						table.CreatedAt = reader.IisNull<DateTime?>("Create_Date");
-						table.UpdatedAt = reader.IisNull<DateTime?>("Modify_Date");
-						table.Description = reader.IisNull<string>("Description");
-						// Añade el objeto a la colección
-						schema.Tables.Add(table);
+						if (tableView is not null)
+						{
+							// Asigna los datos del registro a la tabla / vista
+							tableView.Catalog = reader.IisNull<string>("TABLE_CATALOG");
+							// Añade el campo
+							tableView.Fields.Add(new FieldDbModel()
+													{
+														Catalog = reader.IisNull<string>("Table_Catalog"),
+														Name = reader.IisNull<string>("Column_Name"),
+														OrdinalPosition = reader.IisNull<int>("Ordinal_Position", 0),
+														Default = reader.IisNull<string>("Column_Default"),
+														IsRequired = (reader.IisNull<string>("Is_Nullable") ?? "Unknown").Equals("no", StringComparison.CurrentCultureIgnoreCase),
+														Type = GetFieldType(reader.IisNull<string>("Data_Type")),
+														DbType = reader.IisNull<string>("Data_Type"),
+														Length = reader.IisNull<int>("Character_Maximum_Length", 0),
+														NumericPrecision = reader.IisNull<int>("Numeric_Precision", 0),
+														NumericPrecisionRadix = reader.IisNull<int>("Numeric_Precision_Radix", 0),
+														NumericScale = reader.IisNull<int>("Numeric_Scale", 0),
+														DateTimePrecision = reader.IisNull<int>("DateTime_Precision", 0),
+														CharacterSetName = reader.IisNull<string>("Character_Set_Name"),
+														CollationCatalog = reader.IisNull<string>("Collation_Catalog"),
+														CollationSchema = reader.IisNull<string>("Collation_Schema"),
+														CollationName = reader.IisNull<string>("Collation_Name")
+														// Estos campos se tienen que sacar de otras vistas
+														//Description = reader.IisNull<string>("Description")
+													}
+											);
+						}
 				}
 			}
-			// Carga los datos de las tablas
-			foreach (TableDbModel table in schema.Tables)
-			{
-				await LoadColumnsAsync(connection, table, timeout, cancellationToken);
-				await LoadConstraintsAsync(connection, table, timeout, cancellationToken);
-			}
+			// Carga los datos adicionales de las vistas
+			await LoadViewsDefinitionAsync(connection, schema.Views, timeout, cancellationToken);
+			// Carga las restricciones de las tablas
+			await LoadConstraintsAsync(connection, schema.Tables, timeout, cancellationToken);
 	}
 
 	/// <summary>
-	///		Carga la definición de vistas
+	///		Carga los datos adicionales de la definición de vistas
 	/// </summary>
-	private async Task LoadViewsAsync(SqlServerProvider connection, SchemaDbModel schema, TimeSpan timeout, CancellationToken cancellationToken)
+	private async Task LoadViewsDefinitionAsync(SqlServerProvider connection, List<ViewDbModel> views, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		string sql = @"SELECT Table_Catalog, Table_Schema, Table_Name, View_Definition, Check_Option, Is_Updatable
-							  FROM Information_Schema.Views
-							  ORDER BY Table_Name";
+		string sql = """
+					SELECT Table_Catalog, Table_Schema, Table_Name, View_Definition, Check_Option, Is_Updatable
+						FROM Information_Schema.Views
+					""";
 
 			// Carga las vistas
 			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, null, CommandType.Text, timeout, cancellationToken))
 			{ 
-				// Lee los registros
 				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
-				{
-					ViewDbModel view = new ViewDbModel();
+				{					
+					ViewDbModel? view = Search(views, reader.IisNull<string>("Table_Catalog"), reader.IisNull<string>("Table_Schema"),
+											   reader.IisNull<string>("Table_Name"));
 
-						// Asigna los datos al objeto
-						view.Catalog = reader.IisNull<string>("Table_Catalog");
-						view.Schema = reader.IisNull<string>("Table_Schema");
-						view.Name = reader.IisNull<string>("Table_Name");
-						view.Definition = reader.IisNull<string>("View_Definition");
-						view.CheckOption = reader.IisNull<string>("Check_Option");
-						view.IsUpdatable = !(reader.IisNull<string>("Is_Updatable") ?? "Unknown").Equals("NO", StringComparison.CurrentCultureIgnoreCase);
-						// Añade el objeto a la colección
-						schema.Views.Add(view);
+						// Asigna los datos adicionales al objeto
+						if (view is not null)
+						{
+							view.Definition = reader.IisNull<string>("View_Definition");
+							view.CheckOption = reader.IisNull<string>("Check_Option");
+							view.IsUpdatable = !(reader.IisNull<string>("Is_Updatable") ?? "Unknown").Equals("NO", StringComparison.CurrentCultureIgnoreCase);
+						}
 				}
 			}
-			// Carga las columnas de la vista
-			foreach (ViewDbModel view in schema.Views)
-				await LoadColumnsAsync(connection, view, timeout, cancellationToken);
+
+		// Busca una vista en una colección
+		ViewDbModel? Search(List<ViewDbModel> views, string? catalogue, string? schema, string? name)
+		{
+			return views.FirstOrDefault(item => $"{item.Catalog}##{item.Schema}##{item.Name}".Equals($"{catalogue}##{schema}##{name}", StringComparison.CurrentCultureIgnoreCase));
+		}
 	}
 
 	/// <summary>
@@ -151,7 +175,7 @@ internal class SqlServerSchemaReader
 				// Recorre la colección de registros
 				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
 				{
-					TriggerDbModel trigger = new TriggerDbModel();
+					TriggerDbModel trigger = new();
 
 						// Asigna los datos del registro al objeto
 						trigger.Catalog = null; // clsBaseDB.iisNull(rdoTables, "TABLE_CATALOG") as string;
@@ -215,10 +239,12 @@ internal class SqlServerSchemaReader
 	/// </summary>
 	private async Task LoadRoutinesAsync(SqlServerProvider connection, SchemaDbModel schema, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		string sql = @"SELECT Routine_Catalog AS Table_Catalog, Routine_Schema AS Table_Schema,
-									Routine_Name AS Table_Name, Routine_Type, Routine_Definition
-								FROM Information_Schema.Routines
-								ORDER BY Routine_Name";
+		string sql = """
+						SELECT Routine_Catalog AS Table_Catalog, Routine_Schema AS Table_Schema,
+							   Routine_Name AS Table_Name, Routine_Type, Routine_Definition
+						  FROM Information_Schema.Routines
+						  ORDER BY Routine_Name
+					""";
 
 			// Carga los datos
 			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, null, CommandType.Text, timeout, cancellationToken))
@@ -226,7 +252,7 @@ internal class SqlServerSchemaReader
 				// Lee los registros
 				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
 				{
-					RoutineDbModel routine = new RoutineDbModel();
+					RoutineDbModel routine = new();
 
 						// Asigna los datos del recordset al objeto
 						routine.Catalog = reader.IisNull<string>("Table_Catalog");
@@ -238,27 +264,24 @@ internal class SqlServerSchemaReader
 						schema.Routines.Add(routine);
 				}
 			}
-	}
 
-	/// <summary>
-	///		Obtiene el tipo de rutina
-	/// </summary>
-	private RoutineDbModel.RoutineType GetRoutineType(string type)
-	{
-		if (type.Equals("PROCEDURE", StringComparison.CurrentCultureIgnoreCase))
-			return RoutineDbModel.RoutineType.Procedure;
-		else if (type.Equals("FUNCTION", StringComparison.CurrentCultureIgnoreCase))
-			return RoutineDbModel.RoutineType.Function;
-		else
-			return RoutineDbModel.RoutineType.Unknown;
+		// Obtiene el tipo de rutina
+		RoutineDbModel.RoutineType GetRoutineType(string type)
+		{
+			if (type.Equals("PROCEDURE", StringComparison.CurrentCultureIgnoreCase))
+				return RoutineDbModel.RoutineType.Procedure;
+			else if (type.Equals("FUNCTION", StringComparison.CurrentCultureIgnoreCase))
+				return RoutineDbModel.RoutineType.Function;
+			else
+				return RoutineDbModel.RoutineType.Unknown;
+		}
 	}
 
 	/// <summary>
 	///		Carga las restricciones de una tabla
 	/// </summary>
-	private async Task LoadConstraintsAsync(SqlServerProvider connection, TableDbModel table, TimeSpan timeout, CancellationToken cancellationToken)
+	private async Task LoadConstraintsAsync(SqlServerProvider connection, List<TableDbModel> tables, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		ParametersDbCollection parameters = new ParametersDbCollection();
 		string sql = @"SELECT TableConstraints.Table_Catalog, TableConstraints.Table_Schema, TableConstraints.Table_Name,
 							   ColumnConstraint.Column_Name, ColumnConstraint.Constraint_Name,
 							   TableConstraints.Constraint_Type, Key_Column.Ordinal_Position
@@ -272,167 +295,67 @@ internal class SqlServerSchemaReader
 										AND ColumnConstraint.Constraint_Schema = Key_Column.Constraint_Schema
 										AND ColumnConstraint.Constraint_Name = Key_Column.Constraint_Name
 										AND ColumnConstraint.Column_Name = Key_Column.Column_Name
-						  WHERE TableConstraints.Table_Catalog = @Table_Catalog
-								AND TableConstraints.Table_Schema = @Table_Schema
-								AND TableConstraints.Table_Name = @Table_Name
 						  ORDER BY TableConstraints.Table_Name, TableConstraints.Constraint_Type, Key_Column.Ordinal_Position";
 
-			// Añade los parámetros
-			parameters.Add("@Table_Catalog", table.Catalog);
-			parameters.Add("@Table_Schema", table.Schema);
-			parameters.Add("@Table_Name", table.Name);
 			// Carga los datos
-			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, parameters, CommandType.Text, timeout, cancellationToken))
+			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, null, CommandType.Text, timeout, cancellationToken))
 			{ 
-				// Lee los datos
 				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
 				{
-					ConstraintDbModel constraint = new ConstraintDbModel();
+					TableDbModel? table = Search(tables, reader.IisNull<string>("Table_Catalog"), reader.IisNull<string>("Table_Schema"), 
+												 reader.IisNull<string>("Table_Name"));
+													
+						if (table is not null)
+						{
+							ConstraintDbModel constraint = new();
 
-						// Asigna los datos del registro
-						constraint.Catalog = reader.IisNull<string>("Table_Catalog");
-						constraint.Schema = reader.IisNull<string>("Table_Schema");
-						constraint.Table = reader.IisNull<string>("Table_Name");
-						constraint.Column = reader.IisNull<string>("Column_Name");
-						constraint.Name = reader.IisNull<string>("Constraint_Name");
-						constraint.Type = GetConstraintType(reader.IisNull<string>("Constraint_Type") ?? "Unknown");
-						constraint.Position = reader.IisNull<int>("Ordinal_Position", 0);
-						// Añade la restricción a la colección
-						table.Constraints.Add(constraint);
+								// Asigna los datos del registro
+								constraint.Catalog = reader.IisNull<string>("Table_Catalog");
+								constraint.Schema = reader.IisNull<string>("Table_Schema");
+								constraint.Table = reader.IisNull<string>("Table_Name");
+								constraint.Column = reader.IisNull<string>("Column_Name");
+								constraint.Name = reader.IisNull<string>("Constraint_Name");
+								constraint.Type = GetConstraintType(reader.IisNull<string>("Constraint_Type") ?? "Unknown");
+								constraint.Position = reader.IisNull<int>("Ordinal_Position", 0);
+								// Añade la restricción a la colección
+								table.Constraints.Add(constraint);
+						}
 				}
 			}
-	}
+			// Ajusta las restricciones de clave primaria
+			foreach (TableDbModel table in tables)
+				foreach (ConstraintDbModel constraint in table.Constraints)
+					if (constraint.Type == ConstraintDbModel.ConstraintType.PrimaryKey || constraint.Type == ConstraintDbModel.ConstraintType.ForeignKey)
+					{
+						FieldDbModel? field = table.Fields.FirstOrDefault(item => (item.Name?? string.Empty).Equals(constraint.Column, StringComparison.CurrentCultureIgnoreCase));
 
-	/// <summary>
-	///		Obtiene el tipo de una restricción a partir de su nombre
-	/// </summary>
-	private ConstraintDbModel.ConstraintType GetConstraintType(string type)
-	{
-		if (type.Equals("UNIQUE", StringComparison.CurrentCultureIgnoreCase))
-			return ConstraintDbModel.ConstraintType.Unique;
-		else if (type.Equals("PRIMARY KEY", StringComparison.CurrentCultureIgnoreCase))
-			return ConstraintDbModel.ConstraintType.PrimaryKey;
-		else if (type.Equals("FOREIGN KEY", StringComparison.CurrentCultureIgnoreCase))
-			return ConstraintDbModel.ConstraintType.ForeignKey;
-		else
-			return ConstraintDbModel.ConstraintType.Unknown;
-	}
+							if (field is not null)
+							{
+								if (constraint.Type == ConstraintDbModel.ConstraintType.PrimaryKey)
+									field.IsKey = true;
+								else
+									field.IsForeignKey = true;
+							}
+					}
 
-	/// <summary>
-	///		Carga las columnas de una tabla
-	/// </summary>
-	private async Task LoadColumnsAsync(SqlServerProvider connection, TableDbModel table, TimeSpan timeout, CancellationToken cancellationToken)
-	{
-		ParametersDbCollection parameters = new ParametersDbCollection();
-		string sql;
+		// Busca una vista en una colección
+		TableDbModel? Search(List<TableDbModel> tables, string? catalogue, string? schema, string? name)
+		{
+			return tables.FirstOrDefault(item => $"{item.Catalog}##{item.Schema}##{item.Name}".Equals($"{catalogue}##{schema}##{name}", StringComparison.CurrentCultureIgnoreCase));
+		}
 
-			// Añade los parámetros
-			parameters.Add("@Table_Catalog", table.Catalog);
-			parameters.Add("@Table_Schema", table.Schema);
-			parameters.Add("@Table_Name", table.Name);
-			// Crea la cadena SQL
-			sql = @"SELECT DISTINCT Columns.Column_Name, Columns.Ordinal_Position, Columns.Column_Default,
-							   Columns.Is_Nullable, Columns.Data_Type, Columns.Character_Maximum_Length,
-							   CONVERT(int, Columns.Numeric_Precision) AS Numeric_Precision,
-							   CONVERT(int, Columns.Numeric_Precision_Radix) AS Numeric_Precision_Radix,
-							   CONVERT(int, Columns.Numeric_Scale) AS Numeric_Scale,
-							   CONVERT(int, Columns.DateTime_Precision) AS DateTime_Precision,
-							   Columns.Character_Set_Name, Columns.Collation_Catalog, Columns.Collation_Schema, Columns.Collation_Name,
-							   Objects.is_identity, CAST(CASE WHEN PrimaryKeys.Column_Name IS NULL THEN 0 ELSE 1 END AS bit) AS IsPrimaryKey,
-							   Properties.value AS Description
-						  FROM Information_Schema.Columns AS Columns INNER JOIN sys.all_objects AS Tables
-								ON Columns.Table_Name = Tables.name
-						  INNER JOIN sys.columns AS Objects
-								ON Columns.Column_Name = Objects.name
-									AND Tables.object_id = Objects.object_id
-						  LEFT JOIN (SELECT Constraints.TABLE_CATALOG, Constraints.TABLE_SCHEMA, KeyUsage.TABLE_NAME, KeyUsage.COLUMN_NAME
-									   FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS Constraints
-									   INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KeyUsage
-											ON Constraints.CONSTRAINT_TYPE = 'PRIMARY KEY' 
-												AND Constraints.CONSTRAINT_NAME = KeyUsage.CONSTRAINT_NAME
-									) AS PrimaryKeys
-								ON  Columns.TABLE_CATALOG = PrimaryKeys.TABLE_CATALOG
-									AND Columns.TABLE_SCHEMA = PrimaryKeys.TABLE_SCHEMA
-									AND Columns.TABLE_NAME = PrimaryKeys.TABLE_NAME
-									AND Columns.COLUMN_NAME = PrimaryKeys.COLUMN_NAME
-							LEFT JOIN sys.extended_properties AS Properties
-								ON Objects.object_id = Properties.major_id
-									AND Properties.minor_id = Objects.column_id
-									AND Properties.name = 'MS_Description'
-						  WHERE Columns.Table_Catalog = @Table_Catalog
-								AND Columns.Table_Schema = @Table_Schema
-								AND Columns.Table_Name = @Table_Name
-						  ORDER BY Columns.Ordinal_Position";
-			// Carga los datos
-			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, parameters, CommandType.Text, timeout, cancellationToken))
-			{ 
-				// Lee los datos
-				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
-				{
-					FieldDbModel column = new FieldDbModel();
-
-						// Asigna los datos del registro
-						column.Name = reader.IisNull<string>("Column_Name");
-						column.OrdinalPosition = reader.IisNull<int>("Ordinal_Position", 0);
-						column.Default = reader.IisNull<string>("Column_Default");
-						column.IsRequired = (reader.IisNull<string>("Is_Nullable") ?? "Unknown").Equals("no", StringComparison.CurrentCultureIgnoreCase);
-						column.Type = GetFieldType(reader.IisNull<string>("Data_Type"));
-						column.DbType = reader.IisNull<string>("Data_Type");
-						column.Length = reader.IisNull<int>("Character_Maximum_Length", 0);
-						column.NumericPrecision = reader.IisNull<int>("Numeric_Precision", 0);
-						column.NumericPrecisionRadix = reader.IisNull<int>("Numeric_Precision_Radix", 0);
-						column.NumericScale = reader.IisNull<int>("Numeric_Scale", 0);
-						column.DateTimePrecision = reader.IisNull<int>("DateTime_Precision", 0);
-						column.CharacterSetName = reader.IisNull<string>("Character_Set_Name");
-						column.CollationCatalog = reader.IisNull<string>("Collation_Catalog");
-						column.CollationSchema = reader.IisNull<string>("Collation_Schema");
-						column.CollationName = reader.IisNull<string>("Collation_Name");
-						column.IsIdentity = reader.IisNull<bool>("is_identity", false);
-						column.IsKey = reader.IisNull<bool>("IsPrimaryKey", false);
-						column.Description = reader.IisNull<string>("Description");
-						// Añade la columna a la colección
-						table.Fields.Add(column);
-				}
-			}
-	}
-
-	/// <summary>
-	///		Carga las columnas de la vista
-	/// </summary>
-	private async Task LoadColumnsAsync(SqlServerProvider connection, ViewDbModel view, TimeSpan timeout, CancellationToken cancellationToken)
-	{
-		ParametersDbCollection parameters = new ParametersDbCollection();
-		string sql = @"SELECT Table_Catalog, Table_Schema, Table_Name, Column_Name, Is_Nullable, Data_Type, Character_Maximum_Length
-							  FROM Information_Schema.Columns
-							  WHERE Table_Catalog = @View_Catalog
-									AND Table_Schema = @View_Schema
-									AND Table_Name = @View_Name";
-
-			// Asigna lo parámetros
-			parameters.Add("@View_Catalog", view.Catalog);
-			parameters.Add("@View_Schema", view.Schema);
-			parameters.Add("@View_Name", view.Name);
-			// Carga las columnas
-			using (DbDataReader reader = await connection.ExecuteReaderAsync(sql, parameters, CommandType.Text, timeout, cancellationToken))
-			{ 
-				// Lee los registros
-				while (!cancellationToken.IsCancellationRequested && await reader.ReadAsync(cancellationToken))
-				{
-					FieldDbModel column = new FieldDbModel();
-
-						// Carga los datos de la columna
-						column.Catalog = reader.IisNull<string>("Table_Catalog");
-						column.Schema = reader.IisNull<string>("Table_Schema");
-						column.Table = reader.IisNull<string>("Table_Name");
-						column.Name = reader.IisNull<string>("Column_Name");
-						column.IsRequired = !(reader.IisNull<string>("Is_Nullable") ?? "No").Equals("no", StringComparison.CurrentCultureIgnoreCase);
-						column.Type = GetFieldType(reader.IisNull<string>("Data_Type"));
-						column.DbType = reader.IisNull<string>("Data_Type");
-						column.Length = reader.IisNull<int>("Character_Maximum_Length", 0);
-						// Añade la columna a la colección
-						view.Fields.Add(column);
-				}
-			}
+		// Obtiene el tipo de una restricción a partir de su nombre
+		ConstraintDbModel.ConstraintType GetConstraintType(string type)
+		{
+			if (type.Equals("UNIQUE", StringComparison.CurrentCultureIgnoreCase))
+				return ConstraintDbModel.ConstraintType.Unique;
+			else if (type.Equals("PRIMARY KEY", StringComparison.CurrentCultureIgnoreCase))
+				return ConstraintDbModel.ConstraintType.PrimaryKey;
+			else if (type.Equals("FOREIGN KEY", StringComparison.CurrentCultureIgnoreCase))
+				return ConstraintDbModel.ConstraintType.ForeignKey;
+			else
+				return ConstraintDbModel.ConstraintType.Unknown;
+		}
 	}
 
 	/// <summary>

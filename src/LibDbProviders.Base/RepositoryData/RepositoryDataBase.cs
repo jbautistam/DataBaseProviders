@@ -73,7 +73,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	public List<TypeData> LoadCollection(string text, ParametersDbCollection parametersDB,
 										 CommandType commandType, AssignDataCallBack callBack, int page, int recordsPerPage)
 	{
-		List<TypeData> results = new List<TypeData>();
+		List<TypeData> results = [];
 
 			// Abre la conexión
 			Connection.Open();
@@ -95,7 +95,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	public TypeData LoadObject(string text, string Parameter, string parameterValue, int parameterLength,
 							   CommandType commandType, AssignDataCallBack callBack)
 	{
-		ParametersDbCollection parametersDB = new ParametersDbCollection();
+		ParametersDbCollection parametersDB = [];
 
 			// Asigna los parámetros
 			parametersDB.Add(Parameter, parameterValue, parameterLength);
@@ -109,7 +109,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	public TypeData LoadObject(string text, string Parameter, int? parameterValue,
 							   CommandType commandType, AssignDataCallBack callBack)
 	{
-		ParametersDbCollection parametersDB = new ParametersDbCollection();
+		ParametersDbCollection parametersDB = [];
 
 			// Asigna los parámetros
 			parametersDB.Add(Parameter, parameterValue);
@@ -342,7 +342,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// </summary>
 	private ParametersDbCollection GetParameters(string Parameter, int? parameterValue)
 	{
-		ParametersDbCollection parametersDB = new ParametersDbCollection();
+		ParametersDbCollection parametersDB = [];
 
 			// Asigna los parámetros
 			parametersDB.Add(Parameter, parameterValue);

@@ -3,13 +3,8 @@
 /// <summary>
 ///		Generador de base de datos
 /// </summary>
-public class SqLiteBuilder
+public class SqLiteBuilder(string fileName)
 {
-	public SqLiteBuilder(string fileName)
-	{
-		FileName = fileName;
-	}
-
 	/// <summary>
 	///		Crea un archivo de base de datos con las tablas especificadas
 	/// </summary>
@@ -45,7 +40,7 @@ public class SqLiteBuilder
 	/// <summary>
 	///		Nombre de archivo
 	/// </summary>
-	public string FileName { get; }
+	public string FileName { get; } = fileName;
 
 	/// <summary>
 	///		Generadores de tablas

@@ -6,15 +6,15 @@ using Bau.Libraries.LibDbProviders.Base.Schema;
 
 namespace Bau.Libraries.LibDbProviders.SqLite.Parser;
 
-    /// <summary>
-    ///		Clase de lectura del esquema de SqLite
-    /// </summary>
-    internal class SqLiteSchemaReader
+/// <summary>
+///		Clase de lectura del esquema de SqLite
+/// </summary>
+internal class SqLiteSchemaReader
 {
 	/// <summary>
 	///		Carga el esquema
 	/// </summary>
-	internal async Task<SchemaDbModel> GetSchemaAsync(SqLiteProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	internal async Task<SchemaDbModel> GetSchemaAsync(SqLiteProvider provider, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
 		SchemaDbModel schema = new();
 

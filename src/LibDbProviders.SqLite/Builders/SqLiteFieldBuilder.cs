@@ -119,10 +119,7 @@ public class SqLiteFieldBuilder
 	/// <summary>
 	///		Vuelve al generador anterior
 	/// </summary>
-	public SqLiteTableBuilder Back()
-	{
-		return Parent;
-	}
+	public SqLiteTableBuilder Back() => Parent;
 
 	/// <summary>
 	///		Nombre del campo

@@ -76,7 +76,7 @@ public class ParametersDbCollection : List<ParameterDb>
     {
         ParameterDb parameterDB = Search(ReturnCodeName);
 
-            if (parameterDB.Value == null || !(parameterDB.Value is int))
+            if (parameterDB.Value is null || !(parameterDB.Value is int))
                 return null;
             else
                 return (int) parameterDB.Value;
@@ -98,8 +98,5 @@ public class ParametersDbCollection : List<ParameterDb>
     /// <summary>
     ///		Indizador de la colección por el nombre de parámetro
     /// </summary>
-    public ParameterDb this[string name]
-    {
-        get { return Search(name); }
-    }
+    public ParameterDb this[string name] => Search(name);
 }

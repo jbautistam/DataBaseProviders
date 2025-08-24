@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 using Bau.Libraries.LibDbProviders.Base;
 using Bau.Libraries.LibDbProviders.Base.Schema;
@@ -28,7 +28,7 @@ public class SqlServerProvider : DbProviderBase
 	/// </summary>
 	protected override DbCommand GetCommand(string text, TimeSpan? timeout = null)
 	{
-		SqlCommand command = new SqlCommand(text, Connection as SqlConnection, Transaction as SqlTransaction);
+		SqlCommand command = new(text, Connection as SqlConnection, Transaction as SqlTransaction);
 
 			// Asigna el tiempo de espera al comando
 			if (timeout != null)
@@ -80,7 +80,7 @@ public class SqlServerProvider : DbProviderBase
 		long records = 0;
 
 			// Copia los datos
-			using (SqlBulkCopy bulkCopy = new SqlBulkCopy(Connection as SqlConnection))
+			using (SqlBulkCopy bulkCopy = new(Connection as SqlConnection))
 			{
 				// Asigna el manejador de eventos que obtiene el número de registros
 				bulkCopy.NotifyAfter = 1;
@@ -109,7 +109,7 @@ public class SqlServerProvider : DbProviderBase
 	/// </summary>
 	private Dictionary<string, string> CreateMappings(IDataReader reader)
 	{
-		Dictionary<string, string> mappings = new();
+		Dictionary<string, string> mappings = [];
 
 			// Obtiene las columnas de mapeo
 			for (int field = 0; field < reader.FieldCount; field++)
@@ -121,9 +121,9 @@ public class SqlServerProvider : DbProviderBase
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	public async override Task<SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	public async override Task<SchemaDbModel> GetSchemaAsync(SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		return await new Parser.SqlServerSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
+		return await new Parser.SqlServerSchemaReader().GetSchemaAsync(this, options, timeout, cancellationToken);
 	}
 
 	/// <summary>

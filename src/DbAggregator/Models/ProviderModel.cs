@@ -193,9 +193,9 @@ public class ProviderModel
 	/// <summary>
 	///		Carga el esquema de base de datos
 	/// </summary>
-	public async Task<SchemaDbModel> LoadSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	public async Task<SchemaDbModel> LoadSchemaAsync(SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		return await Provider.GetSchemaAsync(includeSystemTables, timeout, cancellationToken);
+		return await Provider.GetSchemaAsync(options, timeout, cancellationToken);
 	}
 
 	/// <summary>

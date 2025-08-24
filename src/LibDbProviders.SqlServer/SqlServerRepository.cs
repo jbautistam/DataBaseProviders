@@ -6,17 +6,10 @@ namespace Bau.Libraries.LibDbProviders.SqlServer;
 /// <summary>
 ///		Clase para ayuda de repository de SQL Server
 /// </summary>
-public class SqlServerRepository<TypeData> : RepositoryDataBase<TypeData>
+public class SqlServerRepository<TypeData>(SqlServerProvider connection) : RepositoryDataBase<TypeData>(connection)
 {
-	public SqlServerRepository(SqlServerProvider connection) : base(connection)
-	{
-	}
-
 	/// <summary>
 	///		Devuelve el valor identidad
 	/// </summary>
-	protected override int? GetIdentityValue(ParametersDbCollection parametersDB)
-	{ 
-		return (int?) parametersDB["@return_code"].Value;
-	}
+	protected override int? GetIdentityValue(ParametersDbCollection parametersDB) => (int?) parametersDB["@return_code"].Value;
 }

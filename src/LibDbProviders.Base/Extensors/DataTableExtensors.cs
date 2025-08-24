@@ -69,7 +69,7 @@ public static class DataTableExtensors
     /// </summary>
     public static List<(string field, FieldType type)> GetFieldTypes(this DataTable table)
     {
-        List<(string field, FieldType type)> schema = new List<(string field, FieldType type)>();
+        List<(string field, FieldType type)> schema = [];
 
             // Recorre las columnas devolviendo los campos
             foreach (DataColumn column in table.Columns)
@@ -116,8 +116,5 @@ public static class DataTableExtensors
         {
             return FieldType.Unknown;
         }
-
-        //así como el tipo de matriz siguiente:
-        //Byte[]
     }
 }

@@ -12,12 +12,12 @@ namespace Bau.Libraries.LibDbProviders.DuckDb.Parser;
 internal class DuckDbSchemaReader
 {
 	// Esquemas de sistema
-	private List<string> SystemSchemas = new() { "information_schema" };
+	private List<string> SystemSchemas = [ "information_schema" ];
 
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	internal async Task<SchemaDbModel> GetSchemaAsync(DuckDbProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	internal async Task<SchemaDbModel> GetSchemaAsync(DuckDbProvider provider, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
 		SchemaDbModel schema = new();
 
@@ -27,7 +27,7 @@ internal class DuckDbSchemaReader
 				// Abre la conexión
 				await connection.OpenAsync(cancellationToken);
 				// Carga las tablas y vistas
-				await ReadTablesAsync(connection, schema, timeout, includeSystemTables, cancellationToken);
+				await ReadTablesAsync(connection, schema, options, timeout, cancellationToken);
 				// Carga las columnas
 				await ReadFieldsAsync(connection, schema, timeout, cancellationToken);
 			}
@@ -38,7 +38,7 @@ internal class DuckDbSchemaReader
 	/// <summary>
 	///		Carga las tablas y vistas en el esquema
 	/// </summary>
-	private async Task ReadTablesAsync(DuckDbProvider connection, SchemaDbModel schema, TimeSpan timeout, bool includeSystemTables, CancellationToken cancellationToken)
+	private async Task ReadTablesAsync(DuckDbProvider connection, SchemaDbModel schema, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
 		string sql = """
 						SELECT table_schema, table_name, table_type
@@ -53,7 +53,7 @@ internal class DuckDbSchemaReader
 					string? schemaName = rdoData.IisNull<string>("table_schema");
 					bool isSystemTable = IsSystemSchema(schemaName);
 
-						if (includeSystemTables || !isSystemTable)
+						if (options.IncludeSystemData || !isSystemTable)
 						{
 							BaseTableDbModel? table = schema.Add(!(rdoData.IisNull<string>("table_type") ?? "Unknown").Equals("VIEW", StringComparison.CurrentCultureIgnoreCase),
 																 rdoData.IisNull<string>("table_schema"),

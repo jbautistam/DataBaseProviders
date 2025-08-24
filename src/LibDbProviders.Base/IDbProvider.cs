@@ -201,7 +201,7 @@ public interface IDbProvider : IDisposable
 	/// <summary>
 	///		Obtiene el esquema de la base de datos de forma asíncrona
 	/// </summary>
-	Task<Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken);
+	Task<Schema.SchemaDbModel> GetSchemaAsync(Schema.SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken);
 
 	/// <summary>
 	///		Parámetros de conexión

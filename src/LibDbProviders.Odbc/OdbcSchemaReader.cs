@@ -14,13 +14,13 @@ internal class OdbcSchemaReader
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	internal async Task<SchemaDbModel> GetSchemaAsync(OdbcProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	internal async Task<SchemaDbModel> GetSchemaAsync(OdbcProvider provider, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		SchemaDbModel schema = new SchemaDbModel();
-		List<string> tables = new List<string>();
+		SchemaDbModel schema = new();
+		List<string> tables = [];
 
 			// Carga el esquema
-			using (OdbcConnection connection = new OdbcConnection(provider.ConnectionString.ConnectionString))
+			using (OdbcConnection connection = new(provider.ConnectionString.ConnectionString))
 			{
 				// Abre la conexión
 				await connection.OpenAsync(cancellationToken);

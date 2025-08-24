@@ -9,7 +9,7 @@ public class SqLiteConnectionString : DbConnectionStringBase
 { 
 	// Enumerados públicos
 	/// <summary>
-	///		Modo de apretura de la base de datos
+	///		Modo de apertura de la base de datos
 	/// </summary>
 	public enum OpenMode
 	{

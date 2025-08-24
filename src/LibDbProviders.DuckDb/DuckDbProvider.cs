@@ -8,7 +8,7 @@ using Bau.Libraries.LibDbProviders.Base.Models;
 namespace Bau.Libraries.LibDbProviders.DuckDb;
 
 /// <summary>
-///		Proveedor para ODBC
+///		Proveedor para DuckDb
 /// </summary>
 public class DuckDbProvider : DbProviderBase
 { 
@@ -62,13 +62,13 @@ public class DuckDbProvider : DbProviderBase
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	public override async Task<Base.Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	public override async Task<Base.Schema.SchemaDbModel> GetSchemaAsync(Base.Schema.SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		return await new Parser.DuckDbSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
+		return await new Parser.DuckDbSchemaReader().GetSchemaAsync(this, options, timeout, cancellationToken);
 	}
 
 	/// <summary>
-	///		Obtiene un datatable con el plan de ejcución de una sentencia
+	///		Obtiene un datatable con el plan de ejecución de una sentencia
 	/// </summary>
 	public async override Task<DataTable> GetExecutionPlanAsync(string sql, ParametersDbCollection? parameters, CommandType commandType, 
 																TimeSpan? timeout = null, CancellationToken? cancellationToken = null)

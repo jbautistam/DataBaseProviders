@@ -96,7 +96,7 @@ public class SqlBulkCopy
 	/// </summary>
 	private Dictionary<string, string> Convert(IDataReader reader, Dictionary<string, string> mappings)
 	{
-		Dictionary<string, string> converted = new Dictionary<string, string>();
+		Dictionary<string, string> converted = [];
 
 			// Transforma las claves de mapeo a mayúsculas o crea el mapeo a partir del IDataReader
 			if (mappings != null && mappings.Count > 0)
@@ -154,17 +154,14 @@ public class SqlBulkCopy
 	/// <summary>
 	///		Obtiene un nombre de parámetro
 	/// </summary>
-	private string GetParameterName(string name)
-	{
-		return "@" + name.Replace(' ', '_');
-	}
+	private string GetParameterName(string name) => $"@{name.Replace(' ', '_')}";
 
 	/// <summary>
 	///		Obtiene la colección de parámetros
 	/// </summary>
 	private ParametersDbCollection GetParameters(IDataReader reader, Dictionary<string, string> mappings)
 	{
-		ParametersDbCollection parametersDb = new();
+		ParametersDbCollection parametersDb = [];
 
 			// Asigna los parámetros
 			for (int index = 0; index < reader.FieldCount; index++)

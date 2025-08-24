@@ -12,12 +12,12 @@ namespace Bau.Libraries.LibDbProviders.PostgreSql.Parser;
 internal class PostgreSqlSchemaReader
 {
 	// Esquemas de sistema
-	private List<string> SystemSchemas = new() { "information_schema", "pg_catalog" };
+	private List<string> SystemSchemas = [ "information_schema", "pg_catalog" ];
 
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	internal async Task<SchemaDbModel> GetSchemaAsync(PostgreSqlProvider provider, bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	internal async Task<SchemaDbModel> GetSchemaAsync(PostgreSqlProvider provider, SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
 		SchemaDbModel schema = new SchemaDbModel();
 
@@ -34,7 +34,7 @@ internal class PostgreSqlSchemaReader
 						string? schemaName = rdoData.IisNull<string>("SchemaName");
 						bool isSystemTable = IsSystemSchema(schemaName);
 
-							if (includeSystemTables || !isSystemTable)
+							if (options.IncludeSystemData || !isSystemTable)
 							{
 								BaseTableDbModel? table = schema.Add((rdoData.IisNull<string>("TableType") ?? "Unknown").Equals("TABLE", StringComparison.CurrentCultureIgnoreCase),
 																	 schemaName,

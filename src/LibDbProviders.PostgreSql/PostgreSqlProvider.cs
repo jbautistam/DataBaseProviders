@@ -64,9 +64,9 @@ public class PostgreSqlProvider : DbProviderBase
 	/// <summary>
 	///		Obtiene el esquema
 	/// </summary>
-	public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(bool includeSystemTables, TimeSpan timeout, CancellationToken cancellationToken)
+	public async override Task<Base.Schema.SchemaDbModel> GetSchemaAsync(Base.Schema.SchemaOptions options, TimeSpan timeout, CancellationToken cancellationToken)
 	{
-		return await new Parser.PostgreSqlSchemaReader().GetSchemaAsync(this, includeSystemTables, timeout, cancellationToken);
+		return await new Parser.PostgreSqlSchemaReader().GetSchemaAsync(this, options, timeout, cancellationToken);
 	}
 
 	/// <summary>

@@ -6,12 +6,8 @@ namespace Bau.Libraries.LibDbProviders.SqLite;
 /// <summary>
 ///		Clase para ayuda de repositorios de SqLite
 /// </summary>
-public class SqLiteRepository<TypeData> : RepositoryDataBase<TypeData>
+public class SqLiteRepository<TypeData>(SqLiteProvider connection) : RepositoryDataBase<TypeData>(connection)
 {
-	public SqLiteRepository(SqLiteProvider connection) : base(connection)
-	{
-	}
-
 	/// <summary>
 	///		Devuelve el valor identidad
 	/// </summary>

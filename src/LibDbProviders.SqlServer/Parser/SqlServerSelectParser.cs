@@ -186,26 +186,17 @@ internal class SqlServerSelectParser : BaseSqlHelper
 	/// <summary>
 	///		Obtiene el límite inferior para la paginación
 	/// </summary>
-	protected int GetUpperLimit(int pageNumber, int pageSize)
-	{
-		return (pageNumber + 1) * pageSize;
-	}
+	protected int GetUpperLimit(int pageNumber, int pageSize) => (pageNumber + 1) * pageSize;
 
 	/// <summary>
 	///		Obtiene el límite superior para la paginación
 	/// </summary>
-	protected int GetLowerLimit(int pageNumber, int pageSize)
-	{
-		return pageSize * pageNumber + 1;
-	}
+	protected int GetLowerLimit(int pageNumber, int pageSize) => pageSize * pageNumber + 1;
 
 	/// <summary>
 	///		Indica si en la cadena SQL se incluye un Distinct
 	/// </summary>
-	protected bool HasDistinctClause(string sql)
-	{
-		return sql.StartsWith("SELECT DISTINCT", StringComparison.CurrentCultureIgnoreCase);
-	}
+	protected bool HasDistinctClause(string sql) => sql.StartsWith("SELECT DISTINCT", StringComparison.CurrentCultureIgnoreCase);
 
 	/// <summary>
 	///		Obtiene el alias de un campo

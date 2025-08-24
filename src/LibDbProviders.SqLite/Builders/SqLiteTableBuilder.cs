@@ -3,21 +3,12 @@
 /// <summary>
 ///		Generador de una tabla para SqLite
 /// </summary>
-public class SqLiteTableBuilder
+public class SqLiteTableBuilder(SqLiteBuilder parent, string name)
 {
-	public SqLiteTableBuilder(SqLiteBuilder parent, string name)
-	{
-		Parent = parent;
-		Name = name;
-	}
-
 	/// <summary>
 	///		Crea una tabla
 	/// </summary>
-	public SqLiteTableBuilder WithTable(string name)
-	{
-		return Parent.WithTable(name);
-	}
+	public SqLiteTableBuilder WithTable(string name) => Parent.WithTable(name);
 
 	/// <summary>
 	///		Genera un campo
@@ -76,15 +67,12 @@ public class SqLiteTableBuilder
 	/// <summary>
 	///		Vuelve al generador anterior
 	/// </summary>
-	public SqLiteBuilder Back()
-	{
-		return Parent;
-	}
+	public SqLiteBuilder Back() => Parent;
 
 	/// <summary>
 	///		Nombre de la tabla
 	/// </summary>
-	public string Name { get; }
+	public string Name { get; } = name;
 
 	/// <summary>
 	///		Indica si se debe utilizar un campo RowId en la tabla
@@ -94,7 +82,7 @@ public class SqLiteTableBuilder
 	/// <summary>
 	///		Generador padre
 	/// </summary>
-	private SqLiteBuilder Parent { get; }
+	private SqLiteBuilder Parent { get; } = parent;
 
 	/// <summary>
 	///		Generadores de campos
