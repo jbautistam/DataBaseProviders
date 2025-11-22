@@ -40,20 +40,20 @@ public interface IRepositoryData<TypeData>
 	/// <summary>
 	///		Carga un objeto utilizando genéricos para un procedimiento con un único parámetro alfanumérico
 	/// </summary>
-	TypeData LoadObject(string text, string Parameter, string parameterValue, int parameterLength, 
-						CommandType commandType, AssignDataCallBack callBack);
+	TypeData? LoadObject(string text, string Parameter, string parameterValue, int parameterLength, 
+						 CommandType commandType, AssignDataCallBack callBack);
 	
 	/// <summary>
 	///		Carga un objeto utilizando genéricos para un procedimiento con un único parámetro numérico
 	/// </summary>
-	TypeData LoadObject(string text, string Parameter, int? parameterValue,
-						CommandType commandType, AssignDataCallBack callBack);
+	TypeData? LoadObject(string text, string Parameter, int? parameterValue,
+						 CommandType commandType, AssignDataCallBack callBack);
 	
 	/// <summary>
 	///		Carga un objeto utilizando genéricos
 	/// </summary>
-	TypeData LoadObject(string text, ParametersDbCollection parametersDB, 
-						CommandType commandType, AssignDataCallBack callBack);
+	TypeData? LoadObject(string text, ParametersDbCollection parametersDB, 
+						 CommandType commandType, AssignDataCallBack callBack);
 	
 	/// <summary>
 	///		Ejecuta una sentencia sobre la conexión

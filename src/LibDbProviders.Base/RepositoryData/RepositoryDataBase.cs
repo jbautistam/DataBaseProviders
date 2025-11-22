@@ -70,10 +70,10 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga una colección paginada utilizando genéricos
 	/// </summary>
-	public List<TypeData> LoadCollection(string text, ParametersDbCollection parametersDB,
+	public List<TypeData?> LoadCollection(string text, ParametersDbCollection parametersDB,
 										 CommandType commandType, AssignDataCallBack callBack, int page, int recordsPerPage)
 	{
-		List<TypeData> results = [];
+		List<TypeData?> results = [];
 
 			// Abre la conexión
 			Connection.Open();
@@ -81,7 +81,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			using (IDataReader rdoData = Connection.ExecuteReader(text, parametersDB, commandType, page, recordsPerPage))
 			{ 
 				while (rdoData.Read())
-					results.Add((TypeData) callBack(rdoData));
+					results.Add((TypeData?) callBack(rdoData));
 			}
 			// Cierra la conexión
 			Connection.Close();
@@ -92,7 +92,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga un objeto utilizando genéricos para un procedimiento con un único parámetro alfanumérico
 	/// </summary>
-	public TypeData LoadObject(string text, string Parameter, string parameterValue, int parameterLength,
+	public TypeData? LoadObject(string text, string Parameter, string parameterValue, int parameterLength,
 							   CommandType commandType, AssignDataCallBack callBack)
 	{
 		ParametersDbCollection parametersDB = [];
@@ -106,7 +106,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga un objeto utilizando genéricos para un procedimiento con un único parámetro numérico
 	/// </summary>
-	public TypeData LoadObject(string text, string Parameter, int? parameterValue,
+	public TypeData? LoadObject(string text, string Parameter, int? parameterValue,
 							   CommandType commandType, AssignDataCallBack callBack)
 	{
 		ParametersDbCollection parametersDB = [];
@@ -120,10 +120,9 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga un objeto utilizando genéricos
 	/// </summary>
-	public TypeData? LoadObject(string text, ParametersDbCollection parametersDB,
-							   CommandType commandType, AssignDataCallBack callBack)
+	public TypeData? LoadObject(string text, ParametersDbCollection parametersDB, CommandType commandType, AssignDataCallBack callBack)
 	{
-		TypeData data;
+		TypeData? data;
 
 			// Abre la conexión
 			Connection.Open();
@@ -132,9 +131,9 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			{ 
 				// Lee los datos
 				if (reader.Read())
-					data = (TypeData) callBack(reader);
+					data = (TypeData?) callBack(reader);
 				else
-					data = (TypeData) callBack(null);
+					data = (TypeData?) callBack(null);
 				// Cierra el recordset
 				reader.Close();
 			}
@@ -159,9 +158,9 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			{ 
 				// Lee los datos
 				if (reader.Read())
-					data = (TypeData) callBack(reader);
+					data = (TypeData?) callBack(reader);
 				else
-					data = (TypeData) callBack(null);
+					data = (TypeData?) callBack(null);
 				// Cierra el recordset
 				reader.Close();
 			}
@@ -174,10 +173,10 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	/// <summary>
 	///		Carga una colección utilizando genéricos
 	/// </summary>
-	public async Task<List<TypeData>> LoadCollectionAsync(string text, ParametersDbCollection parametersDB, CommandType commandType, 
+	public async Task<List<TypeData?>> LoadCollectionAsync(string text, ParametersDbCollection parametersDB, CommandType commandType, 
 														  AssignDataCallBack callBack, CancellationToken cancellationToken)
 	{
-		List<TypeData> data = [];
+		List<TypeData?> data = [];
 
 			// Abre la conexión
 			await Connection.OpenAsync(cancellationToken);
@@ -186,7 +185,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 			{ 
 				// Lee los datos
 				while (reader.Read())
-					data.Add((TypeData) callBack(reader));
+					data.Add((TypeData?) callBack(reader));
 				// Cierra el recordset
 				reader.Close();
 			}
@@ -234,7 +233,7 @@ public abstract class RepositoryDataBase<TypeData> : IRepositoryData<TypeData>, 
 	///		Ejecuta una sentencia sobre la conexión y devuelve un escalar
 	/// </summary>
 	public object? ExecuteScalar(string text, string Parameter, string parameterValue,
-								int parameterLength, CommandType commandType = CommandType.Text)
+								 int parameterLength, CommandType commandType = CommandType.Text)
 	{
 		return ExecuteScalar(text, GetParameters(Parameter, parameterValue, parameterLength), commandType);
 	}
